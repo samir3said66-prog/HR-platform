@@ -133,8 +133,8 @@ describe('Concurrent Updates & Optimistic Updates', () => {
       
       // Verify both employees were updated
       const calls = (store.dispatch as any).mock.calls;
-      expect(calls[0][0].payload.employee.id).toBe('emp-1');
-      expect(calls[1][0].payload.employee.id).toBe('emp-2');
+      expect(calls[0][0].employee.id).toBe('emp-1');
+      expect(calls[1][0].employee.id).toBe('emp-2');
     });
 
     it('should handle rapid sequential updates to same record', () => {
@@ -186,7 +186,7 @@ describe('Concurrent Updates & Optimistic Updates', () => {
       
       // Verify the second update was the last one dispatched
       const calls = (store.dispatch as any).mock.calls;
-      expect(calls[1][0].payload.employee.role).toBe('Principal Engineer');
+      expect(calls[1][0].employee.role).toBe('Principal Engineer');
     });
 
     it('should maintain consistency across multiple fields in concurrent updates', () => {
@@ -212,8 +212,8 @@ describe('Concurrent Updates & Optimistic Updates', () => {
       
       // Verify both updates have the same employee ID
       const calls = (store.dispatch as any).mock.calls;
-      expect(calls[0][0].payload.employee.id).toBe('emp-1');
-      expect(calls[1][0].payload.employee.id).toBe('emp-1');
+      expect(calls[0][0].employee.id).toBe('emp-1');
+      expect(calls[1][0].employee.id).toBe('emp-1');
     });
   });
 

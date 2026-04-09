@@ -8,12 +8,14 @@ import {
   ChangeDetectionStrategy,
   signal,
   computed,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
 import { IconComponent } from '../icon/icon.component';
+import { I18nService } from '../../services/i18n.service';
 
 /**
  * Data Table Component with Virtual Scrolling
@@ -24,8 +26,9 @@ import { IconComponent } from '../icon/icon.component';
  * - Sorting functionality
  * - Pagination controls
  * - Expandable row details
+ * - Full RTL support with logical CSS properties
  *
- * Requirements: 6.1, 6.2, 6.3, 6.4, 16.1, 16.2
+ * Requirements: 3.3, 6.1, 7.2
  */
 
 export interface ColumnDefinition {
@@ -44,175 +47,198 @@ export interface SortState {
 @Component({
   selector: 'app-data-table',
   standalone: true,
-  imports: [CommonModule, ScrollingModule, FormsModule, ButtonComponent, IconComponent],
+  imports: [CommonModule, ScrollingModule, FormsModule, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-lg"
+      class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden"
     >
       <!-- Table Header with Controls -->
       <div
-        class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700"
+        class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800"
       >
         <div class="flex items-center gap-4">
           <h3 class="text-lg font-semibold text-slate-900 dark:text-white">
             {{ title }}
           </h3>
-          <span class="text-sm text-slate-500 dark:text-slate-400">
-            {{ filteredData().length }} records
+          <span class="text-sm font-medium text-slate-500 dark:text-slate-400 px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md">
+            {{ filteredData().length }} {{ i18n.translate('common.records') }}
           </span>
         </div>
         <div class="flex items-center gap-2">
           <select
-            [(ngModel)]="pageSize"
+            [(ngModel)]="pageSizeInternal"
             (change)="onPageSizeChange()"
-            class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm"
+            class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
             aria-label="Items per page"
           >
-            <option value="10">10 items</option>
-            <option value="25">25 items</option>
-            <option value="50">50 items</option>
+            <option [value]="10">10 {{ i18n.translate('common.records') }}</option>
+            <option [value]="25">25 {{ i18n.translate('common.records') }}</option>
+            <option [value]="50">50 {{ i18n.translate('common.records') }}</option>
+            <option [value]="100">100 {{ i18n.translate('common.records') }}</option>
           </select>
         </div>
       </div>
 
-      <!-- Table -->
-      <div class="flex-1 overflow-hidden">
-        <div class="flex flex-col h-full">
-          <!-- Column Headers -->
-          <div
-            class="flex bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10"
-          >
-            <div class="w-12 px-4 py-3 flex items-center justify-center">
-              <input
-                type="checkbox"
-                [checked]="allSelected()"
-                (change)="toggleSelectAll()"
-                aria-label="Select all rows"
-                class="w-4 h-4"
-              />
-            </div>
-            <div
-              *ngFor="let column of columns"
-              [style.width]="column.width || 'auto'"
-              class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300"
-            >
-              <button
-                *ngIf="column.sortable"
-                (click)="onSort(column.key)"
-                class="flex items-center gap-2 hover:text-slate-900 dark:hover:text-white transition-colors"
-                [attr.aria-label]="'Sort by ' + column.label"
-              >
-                {{ column.label }}
-                <span
-                  *ngIf="sortState().column === column.key"
-                  class="text-indigo-600 dark:text-indigo-400"
-                >
-                  {{ sortState().direction === 'asc' ? '↑' : '↓' }}
-                </span>
-              </button>
-              <span *ngIf="!column.sortable">{{ column.label }}</span>
-            </div>
-            <div class="w-12 px-4 py-3"></div>
+      <!-- Table Body -->
+      <div class="flex-1 flex flex-col min-h-0">
+        <!-- Column Headers -->
+        <div
+          class="flex bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10"
+        >
+          <div class="w-12 px-4 py-3 flex items-center justify-center">
+            <input
+              type="checkbox"
+              [checked]="allSelected()"
+              (change)="toggleSelectAll()"
+              [attr.aria-label]="i18n.translate('common.select_all')"
+              class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600"
+            />
           </div>
-
-          <!-- Virtual Scrolled Rows -->
-          <cdk-virtual-scroll-viewport
-            [itemSize]="48"
-            class="flex-1"
-            [attr.aria-label]="'Data table with ' + filteredData().length + ' rows'"
+          <div
+            *ngFor="let column of columns"
+            [style.width]="column.width || 'auto'"
+            class="flex-1 px-4 py-3 text-left rtl:text-right text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"
           >
-            <div
-              *cdkVirtualFor="let row of paginatedData()"
-              class="flex border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+            <button
+              *ngIf="column.sortable"
+              (click)="onSort(column.key)"
+              class="flex items-center gap-2 hover:text-slate-900 dark:hover:text-white transition-colors group"
+              [attr.aria-label]="i18n.translate('common.sort_by') + ' ' + column.label"
             >
-              <div class="w-12 px-4 py-3 flex items-center justify-center">
+              {{ column.label }}
+              <span
+                class="transition-opacity"
+                [class.opacity-100]="sortState().column === column.key"
+                [class.opacity-0]="sortState().column !== column.key"
+                [class.group-hover:opacity-50]="sortState().column !== column.key"
+              >
+                <span *ngIf="sortState().column === column.key">
+                  {{ sortState().direction === 'desc' ? '↓' : '↑' }}
+                </span>
+              </span>
+            </button>
+            <span *ngIf="!column.sortable">{{ column.label }}</span>
+          </div>
+          <div class="w-12 px-4 py-3"></div>
+        </div>
+
+        <!-- Virtual Scrolled Viewport -->
+        <cdk-virtual-scroll-viewport
+          [itemSize]="56"
+          class="flex-1 h-full scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600"
+        >
+          <ng-container *cdkVirtualFor="let row of paginatedData(); trackBy: trackById">
+            <div
+              class="flex items-center border-b border-slate-200 dark:border-slate-700 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-colors bg-white dark:bg-slate-800"
+              [class.bg-indigo-50/30]="isRowSelected(row.id)"
+              [class.dark:bg-indigo-900/5]="isRowSelected(row.id)"
+            >
+              <div class="w-12 px-4 py-4 flex items-center justify-center">
                 <input
                   type="checkbox"
                   [checked]="isRowSelected(row.id)"
                   (change)="toggleRowSelection(row.id)"
                   [attr.aria-label]="'Select row ' + row.id"
-                  class="w-4 h-4"
+                  class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600"
                 />
               </div>
               <div
                 *ngFor="let column of columns"
                 [style.width]="column.width || 'auto'"
-                class="px-4 py-3 text-sm text-slate-900 dark:text-slate-100"
+                class="flex-1 px-4 py-4 text-sm font-medium text-slate-700 dark:text-slate-200 truncate"
               >
-                {{ column.template ? column.template(row[column.key], row) : row[column.key] }}
+                <ng-container *ngIf="column.template; else defaultVal">
+                  <div [innerHTML]="column.template(row[column.key], row)"></div>
+                </ng-container>
+                <ng-template #defaultVal>
+                  {{ row[column.key] }}
+                </ng-template>
               </div>
-              <div class="w-12 px-4 py-3 flex items-center justify-center">
+              <div class="w-12 px-4 py-4 flex items-center justify-center">
                 <button
                   (click)="toggleRowExpanded(row.id)"
-                  class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300"
-                  [attr.aria-label]="'Expand row ' + row.id"
+                  class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                  [attr.aria-label]="i18n.translate('common.expand')"
+                  [class.rotate-180]="isRowExpanded(row.id)"
                 >
-                  {{ isRowExpanded(row.id) ? '−' : '+' }}
+                  <app-icon name="chevron-down" size="sm"></app-icon>
                 </button>
               </div>
             </div>
 
-            <!-- Expandable Row Details -->
-            <ng-container *ngFor="let row of paginatedData()">
+            <!-- Expanded Details (Simplified integration for Virtual Scroll) -->
+            <div
+              *ngIf="isRowExpanded(row.id)"
+              class="bg-slate-50 dark:bg-slate-900/50 px-12 py-6 border-b border-slate-200 dark:border-slate-700 animate-in fade-in slide-in-from-top-2 duration-200"
+            >
+              <ng-container *ngIf="expandedRowTemplate">
+                <ng-container
+                  *ngTemplateOutlet="expandedRowTemplate; context: { $implicit: row }"
+                ></ng-container>
+              </ng-container>
               <div
-                *ngIf="isRowExpanded(row.id)"
-                class="bg-slate-50 dark:bg-slate-900 px-4 py-4 border-b border-slate-200 dark:border-slate-700"
+                *ngIf="!expandedRowTemplate"
+                class="grid grid-cols-2 md:grid-cols-3 gap-6"
               >
-                <ng-container *ngIf="expandedRowTemplate">
-                  <ng-container
-                    *ngTemplateOutlet="expandedRowTemplate; context: { $implicit: row }"
-                  ></ng-container>
-                </ng-container>
-                <div
-                  *ngIf="!expandedRowTemplate"
-                  class="text-sm text-slate-600 dark:text-slate-400"
-                >
-                  <div *ngFor="let column of columns" class="flex justify-between py-1">
-                    <span class="font-medium">{{ column.label }}:</span>
-                    <span>{{
-                      column.template ? column.template(row[column.key], row) : row[column.key]
-                    }}</span>
-                  </div>
+                <div *ngFor="let column of columns" class="space-y-1">
+                  <span class="text-xs font-bold text-slate-400 uppercase tracking-tighter">{{ column.label }}</span>
+                  <p class="text-sm text-slate-700 dark:text-slate-300">
+                    {{ column.template ? '' : row[column.key] }}
+                    <span *ngIf="column.template" [innerHTML]="column.template(row[column.key], row)"></span>
+                  </p>
                 </div>
               </div>
-            </ng-container>
-          </cdk-virtual-scroll-viewport>
-        </div>
+            </div>
+          </ng-container>
+        </cdk-virtual-scroll-viewport>
       </div>
 
-      <!-- Pagination Controls -->
-      <div
-        class="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+      <!-- Pagination Footer -->
+      <footer
+        class="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/80 backdrop-blur-sm"
       >
-        <div class="text-sm text-slate-600 dark:text-slate-400">
-          Showing {{ currentPageStart() + 1 }} to {{ currentPageEnd() }} of
-          {{ filteredData().length }}
+        <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+          {{ i18n.translate('common.showing') }} {{ currentPageStart() + 1 }} {{ i18n.translate('common.to') }} {{ currentPageEnd() }} {{ i18n.translate('common.of') }}
+          <span class="text-slate-900 dark:text-white">{{ filteredData().length }}</span>
         </div>
-        <div class="flex items-center gap-2">
-          <button
-            (click)="previousPage()"
-            [disabled]="currentPage() === 0"
-            class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            aria-label="Previous page"
-          >
-            ← Previous
-          </button>
-          <span class="text-sm text-slate-600 dark:text-slate-400">
-            Page {{ currentPage() + 1 }} of {{ totalPages() }}
-          </span>
-          <button
-            (click)="nextPage()"
-            [disabled]="currentPage() >= totalPages() - 1"
-            class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            aria-label="Next page"
-          >
-            Next →
-          </button>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1">
+            <button
+              (click)="previousPage()"
+              [disabled]="currentPage() === 0"
+              class="p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
+              [attr.aria-label]="i18n.translate('common.previous')"
+            >
+              <app-icon name="chevron-left" size="sm"></app-icon>
+            </button>
+            
+            <div class="flex items-center px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md text-sm font-bold text-indigo-600 dark:text-indigo-400 shadow-sm">
+              {{ currentPage() + 1 }} / {{ totalPages() }}
+            </div>
+
+            <button
+              (click)="nextPage()"
+              [disabled]="currentPage() >= totalPages() - 1"
+              class="p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
+              [attr.aria-label]="i18n.translate('common.next')"
+            >
+              <app-icon name="chevron-right" size="sm"></app-icon>
+            </button>
+          </div>
         </div>
-      </div>
+      </footer>
     </div>
   `,
+  styles: [`
+    :host {
+      display: block;
+      height: 100%;
+    }
+    cdk-virtual-scroll-viewport {
+      scrollbar-width: thin;
+    }
+  `]
 })
 export class DataTableComponent implements OnInit, OnDestroy {
   @Input() title = 'Data Table';
@@ -224,8 +250,10 @@ export class DataTableComponent implements OnInit, OnDestroy {
   @Output() rowSelectionChange = new EventEmitter<string[]>();
   @Output() rowExpanded = new EventEmitter<string>();
 
+  public i18n = inject(I18nService);
+
   // Signals
-  pageSize = signal(10);
+  pageSizeInternal = signal(25);
   currentPage = signal(0);
   sortState = signal<SortState>({ column: null, direction: 'asc' });
   selectedRows = signal<Set<string>>(new Set());
@@ -233,7 +261,11 @@ export class DataTableComponent implements OnInit, OnDestroy {
 
   // Computed
   filteredData = computed(() => {
-    let result = [...this.data];
+    const data = this.data;
+    if (!data || data.length === 0) return [];
+    
+    // Create copy for sorting
+    const result = [...data];
 
     // Apply sorting
     const sort = this.sortState();
@@ -243,9 +275,9 @@ export class DataTableComponent implements OnInit, OnDestroy {
         const aVal = a[column];
         const bVal = b[column];
 
-        if (aVal < bVal) return sort.direction === 'asc' ? -1 : 1;
-        if (aVal > bVal) return sort.direction === 'asc' ? 1 : -1;
-        return 0;
+        if (aVal === bVal) return 0;
+        const comparison = aVal < bVal ? -1 : 1;
+        return sort.direction === 'asc' ? comparison : -comparison;
       });
     }
 
@@ -254,20 +286,20 @@ export class DataTableComponent implements OnInit, OnDestroy {
 
   paginatedData = computed(() => {
     const filtered = this.filteredData();
-    const start = this.currentPage() * this.pageSize();
-    return filtered.slice(start, start + this.pageSize());
+    const start = this.currentPage() * this.pageSizeInternal();
+    return filtered.slice(start, start + this.pageSizeInternal());
   });
 
   totalPages = computed(() => {
-    return Math.ceil(this.filteredData().length / this.pageSize());
+    return Math.ceil(this.filteredData().length / this.pageSizeInternal()) || 1;
   });
 
   currentPageStart = computed(() => {
-    return this.currentPage() * this.pageSize();
+    return this.currentPage() * this.pageSizeInternal();
   });
 
   currentPageEnd = computed(() => {
-    return Math.min(this.currentPageStart() + this.pageSize(), this.filteredData().length);
+    return Math.min(this.currentPageStart() + this.pageSizeInternal(), this.filteredData().length);
   });
 
   allSelected = computed(() => {
@@ -277,11 +309,16 @@ export class DataTableComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    // Initialize component
+    // Reset page if data changes
+    this.currentPage.set(0);
   }
 
   ngOnDestroy(): void {
     // Cleanup
+  }
+
+  trackById(index: number, item: any): string {
+    return item.id;
   }
 
   onSort(column: string): void {

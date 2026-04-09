@@ -36,7 +36,7 @@ export interface KPIData {
 @Component({
   selector: 'app-kpi-card',
   standalone: true,
-  imports: [CommonModule, BadgeComponent],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('numberChange', [

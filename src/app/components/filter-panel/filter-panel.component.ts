@@ -50,7 +50,7 @@ export interface FilterPreset {
 @Component({
   selector: 'app-filter-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent, SelectComponent, DatePickerComponent],
+  imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-lg p-6">

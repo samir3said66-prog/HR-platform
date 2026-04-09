@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AuthService } from './auth.service';
 
 /**
@@ -77,7 +77,9 @@ export class AuthorizationService {
     ],
   };
 
-  constructor(private authService: AuthService) {}
+  private authService = inject(AuthService);
+
+  constructor() {}
 
   /**
    * Check if user can perform an action on a resource

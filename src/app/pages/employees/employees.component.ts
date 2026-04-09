@@ -56,7 +56,6 @@ export interface Employee extends SearchResult {
     SearchInputComponent,
     FilterPanelComponent,
     CardComponent,
-    BadgeComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

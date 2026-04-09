@@ -14,7 +14,8 @@ import { inject } from '@angular/core';
   providedIn: 'root',
 })
 export class AuthorizationGuardService {
-  constructor(private router: Router) {}
+  private router = inject(Router);
+
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     // TODO: Replace with actual authorization check

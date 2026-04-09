@@ -1,7 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EmployeesComponent, Employee } from './employees.component';
 import { provideMockStore } from '@ngrx/store/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { Component } from '@angular/core';
+
+@Component({ selector: 'app-data-table', template: '', standalone: true })
+class MockDataTableComponent {}
+@Component({ selector: 'app-search-input', template: '', standalone: true })
+class MockSearchInputComponent {}
+@Component({ selector: 'app-filter-panel', template: '', standalone: true })
+class MockFilterPanelComponent {}
+@Component({ selector: 'app-card', template: '', standalone: true })
+class MockCardComponent {}
+@Component({ selector: 'app-badge', template: '', standalone: true })
+class MockBadgeComponent {}
 
 describe('EmployeesComponent', () => {
   let component: EmployeesComponent;
@@ -45,7 +57,7 @@ describe('EmployeesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmployeesComponent, BrowserAnimationsModule],
+      imports: [EmployeesComponent, NoopAnimationsModule],
       providers: [
         provideMockStore({
           initialState: {
@@ -63,7 +75,20 @@ describe('EmployeesComponent', () => {
           },
         }),
       ],
-    }).compileComponents();
+    })
+    .overrideComponent(EmployeesComponent, {
+      remove: { imports: [
+        // Real components to remove from imports
+      ] },
+      add: { imports: [
+        MockDataTableComponent,
+        MockSearchInputComponent,
+        MockFilterPanelComponent,
+        MockCardComponent,
+        MockBadgeComponent
+      ] }
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(EmployeesComponent);
     component = fixture.componentInstance;

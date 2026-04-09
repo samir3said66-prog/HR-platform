@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+
 import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl } from '@angular/platform-browser';
 
 /**
@@ -36,7 +37,8 @@ export class SanitizerService {
     'onsubmit', 'ondblclick', 'oncontextmenu', 'onwheel'
   ];
 
-  constructor(private domSanitizer: DomSanitizer) {}
+  private domSanitizer = inject(DomSanitizer);
+
 
   /**
    * Sanitize HTML content

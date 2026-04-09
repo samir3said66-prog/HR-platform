@@ -53,7 +53,7 @@ export interface NotificationPreferences {
 @Component({
   selector: 'app-notification-center',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent],
+  imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-lg overflow-hidden">

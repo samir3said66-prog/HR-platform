@@ -1,4 +1,6 @@
-import { Injectable, signal, effect } from '@angular/core';
+import { Injectable, signal, effect, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 type Language = 'en' | 'ar';
 
@@ -6,28 +8,32 @@ type Language = 'en' | 'ar';
  * Internationalization Service
  *
  * Manages language switching between English and Arabic.
+ * Loads translation data from JSON assets.
  * Persists language preference to local storage.
  * Handles RTL layout switching for Arabic.
  *
- * Requirements: 9.1, 9.2, 9.3, 9.4
+ * Requirements: 2.3, 7.2, 9.1
  */
 @Injectable({
   providedIn: 'root',
 })
 export class I18nService {
+  private readonly http = inject(HttpClient);
   private readonly LANGUAGE_KEY = 'app-language';
   private readonly DEFAULT_LANGUAGE: Language = 'en';
 
   language = signal<Language>(this.getStoredLanguage());
   isRTL = signal<boolean>(this.language() === 'ar');
+  private translations = signal<Record<string, any>>({});
 
   constructor() {
-    // Update RTL when language changes
+    // Update RTL and translations when language changes
     effect(() => {
       const lang = this.language();
       this.isRTL.set(lang === 'ar');
       this.applyLanguageToDOM(lang);
       this.persistLanguage(lang);
+      this.loadTranslations(lang);
     });
   }
 
@@ -54,6 +60,15 @@ export class I18nService {
     }
   }
 
+  private async loadTranslations(language: Language): Promise<void> {
+    try {
+      const data = await firstValueFrom(this.http.get(`assets/i18n/${language.toLowerCase()}.json`));
+      this.translations.set(data as Record<string, any>);
+    } catch (error) {
+      console.error(`[I18nService] Failed to load translations for ${language}:`, error);
+    }
+  }
+
   setLanguage(language: Language): void {
     this.language.set(language);
   }
@@ -70,48 +85,22 @@ export class I18nService {
     return this.language() === 'en';
   }
 
-  // Translation dictionary
-  private translations: Record<Language, Record<string, string>> = {
-    en: {
-      'app.title': 'HR Analytics Platform',
-      'app.dashboard': 'Dashboard',
-      'app.employees': 'Employees',
-      'app.performance': 'Performance',
-      'app.reports': 'Reports',
-      'app.settings': 'Settings',
-      'common.save': 'Save',
-      'common.cancel': 'Cancel',
-      'common.delete': 'Delete',
-      'common.edit': 'Edit',
-      'common.add': 'Add',
-      'common.search': 'Search',
-      'common.filter': 'Filter',
-      'common.loading': 'Loading...',
-      'common.error': 'An error occurred',
-      'common.success': 'Success',
-    },
-    ar: {
-      'app.title': 'منصة تحليلات الموارد البشرية',
-      'app.dashboard': 'لوحة التحكم',
-      'app.employees': 'الموظفون',
-      'app.performance': 'الأداء',
-      'app.reports': 'التقارير',
-      'app.settings': 'الإعدادات',
-      'common.save': 'حفظ',
-      'common.cancel': 'إلغاء',
-      'common.delete': 'حذف',
-      'common.edit': 'تعديل',
-      'common.add': 'إضافة',
-      'common.search': 'بحث',
-      'common.filter': 'تصفية',
-      'common.loading': 'جاري التحميل...',
-      'common.error': 'حدث خطأ',
-      'common.success': 'نجح',
-    },
-  };
-
+  /**
+   * Translates a key using nested object access
+   * e.g. translate('app.title')
+   */
   translate(key: string): string {
-    const lang = this.language();
-    return this.translations[lang][key] || key;
+    const keys = key.split('.');
+    let result = this.translations();
+
+    for (const k of keys) {
+      if (result && result[k]) {
+        result = result[k];
+      } else {
+        return key; // Return key if translation not found
+      }
+    }
+
+    return typeof result === 'string' ? result : key;
   }
 }

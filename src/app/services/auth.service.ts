@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
@@ -55,10 +55,10 @@ export class AuthService {
 
   private sessionTimeoutTimer: any;
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {
+  private http = inject(HttpClient);
+  private router = inject(Router);
+
+  constructor() {
     this.initializeSession();
   }
 

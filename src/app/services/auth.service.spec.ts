@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { AuthService, LoginRequest, LoginResponse } from './auth.service';
@@ -51,75 +52,74 @@ describe('AuthService', () => {
   });
 
   describe('Login', () => {
-    it('should login with valid credentials', (done) => {
+    it('should login with valid credentials', async () => {
       const credentials: LoginRequest = {
         username: 'testuser',
         password: 'password123'
       };
 
-      service.login(credentials).subscribe(response => {
-        expect(response.token).toBe(mockLoginResponse.token);
-        expect(response.user.username).toBe('testuser');
-        done();
-      });
+      const loginPromise = firstValueFrom(service.login(credentials));
 
       const req = httpMock.expectOne('/api/auth/login');
       expect(req.request.method).toBe('POST');
       req.flush(mockLoginResponse);
+
+      const response = await loginPromise;
+      expect(response.token).toBe(mockLoginResponse.token);
+      expect(response.user.username).toBe('testuser');
     });
 
-    it('should store token after successful login', (done) => {
+    it('should store token after successful login', async () => {
       const credentials: LoginRequest = {
         username: 'testuser',
         password: 'password123'
       };
 
-      service.login(credentials).subscribe(() => {
-        expect(localStorage.getItem('hr_analytics_token')).toBe(mockLoginResponse.token);
-        expect(localStorage.getItem('hr_analytics_refresh_token')).toBe(mockLoginResponse.refreshToken);
-        done();
-      });
+      const loginPromise = firstValueFrom(service.login(credentials));
 
       const req = httpMock.expectOne('/api/auth/login');
       req.flush(mockLoginResponse);
+
+      await loginPromise;
+      expect(localStorage.getItem('hr_analytics_token')).toBe(mockLoginResponse.token);
+      expect(localStorage.getItem('hr_analytics_refresh_token')).toBe(mockLoginResponse.refreshToken);
     });
 
-    it('should set current user after successful login', (done) => {
+    it('should set current user after successful login', async () => {
       const credentials: LoginRequest = {
         username: 'testuser',
         password: 'password123'
       };
 
-      service.login(credentials).subscribe(() => {
-        const user = service.getCurrentUser();
-        expect(user).toBeDefined();
-        expect(user?.username).toBe('testuser');
-        expect(user?.roles).toContain('admin');
-        done();
-      });
+      const loginPromise = firstValueFrom(service.login(credentials));
 
       const req = httpMock.expectOne('/api/auth/login');
       req.flush(mockLoginResponse);
+
+      await loginPromise;
+      const user = service.getCurrentUser();
+      expect(user).toBeDefined();
+      expect(user?.username).toBe('testuser');
+      expect(user?.roles).toContain('admin');
     });
 
-    it('should handle login failure', (done) => {
+    it('should handle login failure', async () => {
       const credentials: LoginRequest = {
         username: 'testuser',
         password: 'wrongpassword'
       };
 
-      service.login(credentials).subscribe({
-        next: () => {
-          expect.fail('Should have failed');
-        },
-        error: (error) => {
-          expect(error.message).toContain('Login failed');
-          done();
-        }
-      });
+      const loginPromise = firstValueFrom(service.login(credentials));
 
       const req = httpMock.expectOne('/api/auth/login');
       req.error(new ErrorEvent('Unauthorized'), { status: 401 });
+
+      try {
+        await loginPromise;
+        expect.fail('Should have failed');
+      } catch (error: any) {
+        expect(error.message).toContain('Login failed');
+      }
     });
   });
 
@@ -134,23 +134,22 @@ describe('AuthService', () => {
       expect(localStorage.getItem('hr_analytics_refresh_token')).toBeNull();
     });
 
-    it('should clear current user on logout', (done) => {
+    it('should clear current user on logout', async () => {
       const credentials: LoginRequest = {
         username: 'testuser',
         password: 'password123'
       };
 
-      service.login(credentials).subscribe(() => {
-        expect(service.getCurrentUser()).toBeDefined();
-
-        service.logout();
-
-        expect(service.getCurrentUser()).toBeNull();
-        done();
-      });
-
+      const loginPromise = firstValueFrom(service.login(credentials));
       const req = httpMock.expectOne('/api/auth/login');
       req.flush(mockLoginResponse);
+      await loginPromise;
+
+      expect(service.getCurrentUser()).toBeDefined();
+
+      service.logout();
+
+      expect(service.getCurrentUser()).toBeNull();
     });
 
     it('should navigate to login on logout', () => {
@@ -174,7 +173,7 @@ describe('AuthService', () => {
       expect(service.getToken()).toBeNull();
     });
 
-    it('should refresh token', (done) => {
+    it('should refresh token', async () => {
       localStorage.setItem('hr_analytics_refresh_token', 'refresh-token-123');
 
       const newResponse: LoginResponse = {
@@ -182,32 +181,31 @@ describe('AuthService', () => {
         token: 'new-token-456'
       };
 
-      service.refreshToken().subscribe(response => {
-        expect(response.token).toBe('new-token-456');
-        expect(localStorage.getItem('hr_analytics_token')).toBe('new-token-456');
-        done();
-      });
+      const refreshPromise = firstValueFrom(service.refreshToken());
 
       const req = httpMock.expectOne('/api/auth/refresh');
       expect(req.request.method).toBe('POST');
       req.flush(newResponse);
+
+      const response = await refreshPromise;
+      expect(response.token).toBe('new-token-456');
+      expect(localStorage.getItem('hr_analytics_token')).toBe('new-token-456');
     });
   });
 
   describe('Authentication Status', () => {
-    it('should return true if authenticated', (done) => {
+    it('should return true if authenticated', async () => {
       const credentials: LoginRequest = {
         username: 'testuser',
         password: 'password123'
       };
 
-      service.login(credentials).subscribe(() => {
-        expect(service.isAuthenticated()).toBe(true);
-        done();
-      });
-
+      const loginPromise = firstValueFrom(service.login(credentials));
       const req = httpMock.expectOne('/api/auth/login');
       req.flush(mockLoginResponse);
+      await loginPromise;
+
+      expect(service.isAuthenticated()).toBe(true);
     });
 
     it('should return false if not authenticated', () => {
@@ -216,18 +214,16 @@ describe('AuthService', () => {
   });
 
   describe('Role Management', () => {
-    beforeEach((done) => {
+    beforeEach(async () => {
       const credentials: LoginRequest = {
         username: 'testuser',
         password: 'password123'
       };
 
-      service.login(credentials).subscribe(() => {
-        done();
-      });
-
+      const loginPromise = firstValueFrom(service.login(credentials));
       const req = httpMock.expectOne('/api/auth/login');
       req.flush(mockLoginResponse);
+      await loginPromise;
     });
 
     it('should check if user has role', () => {
@@ -247,7 +243,7 @@ describe('AuthService', () => {
   });
 
   describe('Session Timeout', () => {
-    it('should logout on session timeout', (done) => {
+    it('should logout on session timeout', async () => {
       vi.useFakeTimers();
 
       const credentials: LoginRequest = {
@@ -255,19 +251,18 @@ describe('AuthService', () => {
         password: 'password123'
       };
 
-      service.login(credentials).subscribe(() => {
-        expect(service.isAuthenticated()).toBe(true);
-
-        // Fast-forward 30 minutes
-        vi.advanceTimersByTime(30 * 60 * 1000);
-
-        // Session should be cleared
-        expect(service.isAuthenticated()).toBe(false);
-        done();
-      });
-
+      const loginPromise = firstValueFrom(service.login(credentials));
       const req = httpMock.expectOne('/api/auth/login');
       req.flush(mockLoginResponse);
+      await loginPromise;
+
+      expect(service.isAuthenticated()).toBe(true);
+
+      // Fast-forward 30 minutes
+      vi.advanceTimersByTime(30 * 60 * 1000);
+
+      // Session should be cleared
+      expect(service.isAuthenticated()).toBe(false);
 
       vi.useRealTimers();
     });

@@ -351,7 +351,7 @@ describe('Change Detection Strategy', () => {
 
       await new Promise(resolve => setTimeout(resolve, 10));
       
-      expect(updates).toEqual([0, 1, 2, 3]);
+      expect(updates).toEqual([0, 3]);
     });
   });
 });

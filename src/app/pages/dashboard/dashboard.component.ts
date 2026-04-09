@@ -7,7 +7,8 @@ import { CardComponent, KPICardComponent, BadgeComponent } from '../../component
 import { DashboardMetrics } from '../../store/dashboard/dashboard.state';
 import { selectDashboardMetrics } from '../../store/dashboard/dashboard.selectors';
 import { AppState } from '../../store/app.state';
-import { loadDashboardMetrics } from '../../store/dashboard/dashboard.actions';
+import { loadDashboardMetrics, updateDashboardMetricsRealtime } from '../../store/dashboard/dashboard.actions';
+import { WebSocketService } from '../../services/websocket.service';
 
 /**
  * Dashboard Page Component
@@ -117,12 +118,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private store: Store<AppState>;
 
+  private wsService: WebSocketService;
+
   // Signals for reactive state
   metrics = signal<DashboardMetrics | null>(null);
   metricsLoading = signal(false);
 
-  constructor(store: Store<AppState>) {
+  constructor(store: Store<AppState>, wsService: WebSocketService) {
     this.store = store;
+    this.wsService = wsService;
   }
 
   ngOnInit(): void {
@@ -137,6 +141,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (metrics) {
           this.metrics.set(metrics);
         }
+      });
+
+    // Subscribe to real-time web socket updates
+    this.wsService.subscribe<DashboardMetrics>('DASHBOARD_METRICS_UPDATE')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((realtimeMetrics) => {
+        this.store.dispatch(updateDashboardMetricsRealtime({ metrics: realtimeMetrics }));
       });
   }
 

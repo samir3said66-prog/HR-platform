@@ -1,0 +1,37 @@
+{
+  "app": {
+    "title": "منصة تحليلات الموارد البشرية",
+    "dashboard": "لوحة التحكم",
+    "employees": "الموظفون",
+    "performance": "الأداء",
+    "workforce": "القوى العاملة",
+    "turnover": "معدل دوران العمالة",
+    "hiring": "توقعات التوظيف",
+    "reports": "التقارير",
+    "settings": "الإعدادات"
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "search": "بحث",
+    "filter": "تصفية",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "success": "نجح",
+    "records": "سجلات",
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة",
+    "of": "من"
+  },
+  "dashboard": {
+    "real_time": "مقاييس الوقت الفعلي",
+    "total_employees": "إجمالي الموظفين",
+    "avg_performance": "متوسط الأداء",
+    "active": "نشط",
+    "on_leave": "في إجازة"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "app": {
+    "title": "HR Analytics Platform",
+    "dashboard": "Dashboard",
+    "employees": "Employees",
+    "performance": "Performance",
+    "workforce": "Workforce",
+    "turnover": "Turnover",
+    "hiring": "Hiring Forecast",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "records": "records",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of"
+  },
+  "dashboard": {
+    "real_time": "Real-time Metrics",
+    "total_employees": "Total Employees",
+    "avg_performance": "Avg Performance",
+    "active": "Active",
+    "on_leave": "On Leave"
+  }
+}

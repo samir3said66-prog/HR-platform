@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { DashboardLayoutComponent } from './layouts/dashboard-layout/dashboard-layout.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { authorizationGuard } from './guards/authorization.guard';
 
@@ -8,25 +6,30 @@ import { authorizationGuard } from './guards/authorization.guard';
  * Application Routes
  *
  * Configured with:
- * - Lazy loading for feature modules
+ * - Lazy loading for all feature and layout components
  * - Route guards for authentication and authorization
  * - Smart preloading strategy
  *
- * Requirements: 11.4, 30.2, 30.3
+ * Requirements: 1.3, 6.2, 11.4
  */
 export const routes: Routes = [
   {
     path: '',
-    component: DashboardLayoutComponent,
+    loadComponent: () =>
+      import('./layouts/dashboard-layout/dashboard-layout.component').then(
+        (m) => m.DashboardLayoutComponent,
+      ),
     canActivate: [authGuard],
     children: [
       {
         path: '',
-        component: DashboardComponent,
+        loadComponent: () =>
+          import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
         path: 'dashboard',
-        component: DashboardComponent,
+        loadComponent: () =>
+          import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
         path: 'employees',
