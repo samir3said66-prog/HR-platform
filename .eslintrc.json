@@ -1,11 +1,11 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*"],
+  "ignorePatterns": ["projects/**/*", "dist/**/*", "node_modules/**/*", "**/*.html"],
   "overrides": [
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["tsconfig.json"],
+        "project": ["tsconfig.json", "tsconfig.app.json", "tsconfig.spec.json"],
         "createDefaultProgram": true
       },
       "extends": [
@@ -33,13 +33,6 @@
             "argsIgnorePattern": "^_"
           }
         ],
-        "prettier/prettier": "error"
-      }
-    },
-    {
-      "files": ["*.html"],
-      "extends": ["plugin:prettier/recommended"],
-      "rules": {
         "prettier/prettier": "error"
       }
     }
