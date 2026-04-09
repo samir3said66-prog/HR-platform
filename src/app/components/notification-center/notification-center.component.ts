@@ -58,7 +58,9 @@ export interface NotificationPreferences {
   template: `
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-lg overflow-hidden">
       <!-- Header -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+      <div
+        class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700"
+      >
         <div class="flex items-center gap-3">
           <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Notifications</h3>
           <span
@@ -88,8 +90,13 @@ export interface NotificationPreferences {
       </div>
 
       <!-- Settings Panel -->
-      <div *ngIf="showSettings()" class="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
-        <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-4">Notification Preferences</h4>
+      <div
+        *ngIf="showSettings()"
+        class="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700"
+      >
+        <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-4">
+          Notification Preferences
+        </h4>
 
         <div class="space-y-3">
           <!-- Email Notifications -->
@@ -139,7 +146,9 @@ export interface NotificationPreferences {
 
           <!-- Notification Types -->
           <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-            <p class="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-3">Notify me about:</p>
+            <p class="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              Notify me about:
+            </p>
 
             <div class="flex items-center">
               <input
@@ -228,11 +237,19 @@ export interface NotificationPreferences {
 
       <!-- Notifications List -->
       <div class="max-h-96 overflow-y-auto">
-        <div *ngIf="notifications().length === 0" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
+        <div
+          *ngIf="notifications().length === 0"
+          class="px-6 py-8 text-center text-slate-500 dark:text-slate-400"
+        >
           <p class="text-sm">No notifications yet</p>
         </div>
 
-        <div *ngFor="let notification of notifications()" class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors" [class.bg-blue-50]="!notification.read" [class.dark:bg-blue-900/20]="!notification.read">
+        <div
+          *ngFor="let notification of notifications()"
+          class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+          [class.bg-blue-50]="!notification.read"
+          [class.dark:bg-blue-900/20]="!notification.read"
+        >
           <div class="flex items-start gap-3">
             <!-- Type Icon -->
             <div
@@ -290,7 +307,9 @@ export interface NotificationPreferences {
       </div>
 
       <!-- Footer -->
-      <div class="px-6 py-3 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex items-center justify-between">
+      <div
+        class="px-6 py-3 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex items-center justify-between"
+      >
         <button
           (click)="clearAll()"
           class="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
@@ -298,7 +317,10 @@ export interface NotificationPreferences {
         >
           Clear all
         </button>
-        <a href="#" class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
+        <a
+          href="#"
+          class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300"
+        >
           View all notifications
         </a>
       </div>

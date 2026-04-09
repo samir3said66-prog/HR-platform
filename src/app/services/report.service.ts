@@ -118,7 +118,7 @@ export class ReportService {
     doc.setFontSize(10);
     doc.setFont('helvetica', 'italic');
     const generatedDate = new Date().toLocaleDateString(
-      config.language === 'ar' ? 'ar-SA' : 'en-US'
+      config.language === 'ar' ? 'ar-SA' : 'en-US',
     );
     doc.text(`${t.generatedOn}: ${generatedDate}`, margin, yPosition);
     yPosition += 8;
@@ -126,10 +126,10 @@ export class ReportService {
     // Date range
     doc.setFont('helvetica', 'normal');
     const startDate = config.dateRange.startDate.toLocaleDateString(
-      config.language === 'ar' ? 'ar-SA' : 'en-US'
+      config.language === 'ar' ? 'ar-SA' : 'en-US',
     );
     const endDate = config.dateRange.endDate.toLocaleDateString(
-      config.language === 'ar' ? 'ar-SA' : 'en-US'
+      config.language === 'ar' ? 'ar-SA' : 'en-US',
     );
     doc.text(`${t.dateRange}: ${t.from} ${startDate} ${t.to} ${endDate}`, margin, yPosition);
     yPosition += 12;
@@ -168,7 +168,7 @@ export class ReportService {
           `${t.page} ${data.pageNumber} ${t.of} ${pageCount}`,
           pageSize.getWidth() / 2,
           footerY,
-          { align: 'center' }
+          { align: 'center' },
         );
       },
     });
@@ -185,10 +185,7 @@ export class ReportService {
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
 
-      const filterData = Object.entries(config.filters).map(([key, value]) => [
-        key,
-        String(value),
-      ]);
+      const filterData = Object.entries(config.filters).map(([key, value]) => [key, String(value)]);
 
       (doc as any).autoTable({
         head: [['Filter', 'Value']],
@@ -258,7 +255,7 @@ export class ReportService {
     link.setAttribute('href', url);
     link.setAttribute(
       'download',
-      `${config.title.replace(/\s+/g, '_')}_${new Date().getTime()}.csv`
+      `${config.title.replace(/\s+/g, '_')}_${new Date().getTime()}.csv`,
     );
     link.click();
   }
@@ -322,10 +319,7 @@ export class ReportService {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Report');
 
     // Save workbook
-    XLSX.writeFile(
-      workbook,
-      `${config.title.replace(/\s+/g, '_')}_${new Date().getTime()}.xlsx`
-    );
+    XLSX.writeFile(workbook, `${config.title.replace(/\s+/g, '_')}_${new Date().getTime()}.xlsx`);
   }
 
   /**

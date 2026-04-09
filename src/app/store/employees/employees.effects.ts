@@ -6,31 +6,33 @@ import * as EmployeeActions from './employees.actions';
 
 /**
  * EmployeeEffects handles side effects for employee-related operations.
- * 
+ *
  * Effects implemented:
  * - loadEmployees$: Loads employee data from API with retry logic and error handling
- * 
+ *
  * Error Handling Strategy:
  * - Implements retry logic with exponential backoff (3 attempts)
  * - Catches errors and dispatches failure actions
  * - Logs errors for debugging and monitoring
- * 
+ *
  * Requirements: 12.5, 12.6
  */
 @Injectable()
 export class EmployeeEffects {
+  constructor(private actions$: Actions) {}
+
   /**
    * Effect: Load Employees
-   * 
+   *
    * Triggers when loadEmployees action is dispatched.
    * Fetches employee data from API with retry logic.
-   * 
+   *
    * Success: Dispatches loadEmployeesSuccess with employee data
    * Failure: Dispatches loadEmployeesFailure with error message after retries exhausted
-   * 
+   *
    * Retry Strategy: 3 attempts with exponential backoff
    */
-  loadEmployees$ = createEffect(() =>
+  readonly loadEmployees$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployeeActions.loadEmployees),
       switchMap(() =>
@@ -65,16 +67,16 @@ export class EmployeeEffects {
 
   /**
    * Effect: Add Employee
-   * 
+   *
    * Triggers when addEmployee action is dispatched.
    * Sends new employee data to API.
-   * 
+   *
    * Success: Dispatches loadEmployees to refresh the list
    * Failure: Dispatches loadEmployeesFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  addEmployee$ = createEffect(() =>
+  readonly addEmployee$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployeeActions.addEmployee),
       switchMap(({ employee }) =>
@@ -85,10 +87,7 @@ export class EmployeeEffects {
             count: 2,
             delay: (error, retryCount) => {
               const delayMs = Math.pow(2, retryCount) * 1000;
-              console.warn(
-                `[EmployeeEffects] Retry add employee attempt ${retryCount + 1}`,
-                error,
-              );
+              console.warn(`[EmployeeEffects] Retry add employee attempt ${retryCount + 1}`, error);
               return new Promise((resolve) => setTimeout(resolve, delayMs));
             },
           }),
@@ -109,16 +108,16 @@ export class EmployeeEffects {
 
   /**
    * Effect: Update Employee
-   * 
+   *
    * Triggers when updateEmployee action is dispatched.
    * Sends updated employee data to API.
-   * 
+   *
    * Success: Dispatches loadEmployees to refresh the list
    * Failure: Dispatches loadEmployeesFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  updateEmployee$ = createEffect(() =>
+  readonly updateEmployee$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployeeActions.updateEmployee),
       switchMap(({ employee }) =>
@@ -153,16 +152,16 @@ export class EmployeeEffects {
 
   /**
    * Effect: Delete Employee
-   * 
+   *
    * Triggers when deleteEmployee action is dispatched.
    * Sends delete request to API.
-   * 
+   *
    * Success: Dispatches loadEmployees to refresh the list
    * Failure: Dispatches loadEmployeesFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  deleteEmployee$ = createEffect(() =>
+  readonly deleteEmployee$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployeeActions.deleteEmployee),
       switchMap(({ id }) =>
@@ -194,6 +193,4 @@ export class EmployeeEffects {
       ),
     ),
   );
-
-  constructor(private actions$: Actions) {}
 }

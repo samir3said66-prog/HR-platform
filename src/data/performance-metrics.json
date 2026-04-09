@@ -1,0 +1,38 @@
+{
+  "distribution": [
+    { "range": "90-100", "count": 805, "percentage": 6.7 },
+    { "range": "80-89", "count": 3200, "percentage": 26.7 },
+    { "range": "70-79", "count": 5400, "percentage": 45 },
+    { "range": "60-69", "count": 2400, "percentage": 20 },
+    { "range": "Below 60", "count": 195, "percentage": 1.6 }
+  ],
+  "trends": [
+    { "month": "Jan", "score": 76 },
+    { "month": "Feb", "score": 77 },
+    { "month": "Mar", "score": 78 },
+    { "month": "Apr", "score": 78 },
+    { "month": "May", "score": 79 },
+    { "month": "Jun", "score": 79 },
+    { "month": "Jul", "score": 79 },
+    { "month": "Aug", "score": 80 },
+    { "month": "Sep", "score": 80 },
+    { "month": "Oct", "score": 79 },
+    { "month": "Nov", "score": 79 },
+    { "month": "Dec", "score": 79 }
+  ],
+  "byDepartment": [
+    { "department": "Engineering", "score": 85, "count": 450 },
+    { "department": "Sales", "score": 76, "count": 320 },
+    { "department": "Marketing", "score": 81, "count": 180 },
+    { "department": "HR", "score": 78, "count": 95 },
+    { "department": "Finance", "score": 82, "count": 210 },
+    { "department": "Operations", "score": 77, "count": 280 }
+  ],
+  "vsSalary": [
+    { "salary": 50000, "performance": 72 },
+    { "salary": 75000, "performance": 78 },
+    { "salary": 100000, "performance": 84 },
+    { "salary": 125000, "performance": 89 },
+    { "salary": 150000, "performance": 92 }
+  ]
+}

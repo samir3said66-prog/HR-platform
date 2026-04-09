@@ -59,9 +59,7 @@ import { BadgeComponent } from '../../components/badge/badge.component';
 
         <app-card>
           <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-              Average Tenure
-            </p>
+            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Average Tenure</p>
             <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">
               {{ averageTenure() }} yrs
             </p>
@@ -73,9 +71,7 @@ import { BadgeComponent } from '../../components/badge/badge.component';
 
         <app-card>
           <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-              High Risk Roles
-            </p>
+            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">High Risk Roles</p>
             <p class="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">
               {{ highRiskRoles() }}
             </p>
@@ -232,14 +228,7 @@ export class TurnoverComponent implements OnInit {
     type: 'bar',
     title: 'Turnover Rate by Department',
     data: {
-      categories: [
-        'Engineering',
-        'Sales',
-        'Marketing',
-        'HR',
-        'Finance',
-        'Operations',
-      ],
+      categories: ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations'],
       values: [2.1, 4.5, 3.2, 1.8, 2.5, 3.1],
     },
     height: '400px',
@@ -277,8 +266,8 @@ export class TurnoverComponent implements OnInit {
         return months[i % 12] + ' ' + Math.floor(i / 12);
       }),
       values: [
-        1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.3, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0,
-        2.9, 2.8, 2.7, 2.6, 2.5, 2.4, 2.3,
+        1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.3, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 2.9,
+        2.8, 2.7, 2.6, 2.5, 2.4, 2.3,
       ],
     },
     height: '400px',

@@ -1,0 +1,332 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, staging ]
+  pull_request:
+    branches: [ main, develop, staging ]
+
+env:
+  NODE_VERSION: '18'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Job 1: Lint and Code Quality
+  lint:
+    name: Lint & Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run ESLint
+        run: npm run lint
+        
+      - name: Check code formatting
+        run: npm run format:check
+        
+      - name: Run TypeScript compiler
+        run: npm run type-check
+
+  # Job 2: Unit Tests
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run unit tests
+        run: npm run test:ci
+        
+      - name: Generate coverage report
+        run: npm run test:coverage
+        
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  # Job 3: Build
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build application
+        run: npm run build
+        
+      - name: Analyze bundle size
+        run: npm run build:analyze
+        
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: dist/
+          retention-days: 5
+
+  # Job 4: Security Scan
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+        
+      - name: Run security checks
+        run: npm run security:check
+        continue-on-error: true
+
+  # Job 5: Deploy to Staging
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build, test, security]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    
+    environment:
+      name: staging
+      url: https://staging.hr-analytics.example.com
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: dist/
+          
+      - name: Deploy to staging environment
+        run: |
+          echo "Deploying to staging environment..."
+          # Add your staging deployment commands here
+          # Example: aws s3 sync dist/ s3://staging-bucket/
+          # Example: kubectl apply -f k8s/staging/
+          
+      - name: Run smoke tests
+        run: npm run test:smoke:staging
+        continue-on-error: true
+        
+      - name: Notify deployment
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ Deployed to staging environment'
+            })
+
+  # Job 6: Deploy to Production (Blue-Green)
+  deploy-production:
+    name: Deploy to Production (Blue-Green)
+    runs-on: ubuntu-latest
+    needs: [build, test, security]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    environment:
+      name: production
+      url: https://hr-analytics.example.com
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: dist/
+          
+      - name: Setup deployment credentials
+        run: |
+          echo "Setting up deployment credentials..."
+          # Add your credential setup here
+          
+      - name: Deploy to Blue environment
+        run: |
+          echo "Deploying to Blue environment..."
+          # Deploy to blue environment
+          # Example: aws s3 sync dist/ s3://prod-blue-bucket/
+          # Example: kubectl apply -f k8s/production/blue/
+          
+      - name: Run health checks on Blue
+        run: |
+          echo "Running health checks on Blue environment..."
+          npm run test:health:blue
+          
+      - name: Switch traffic to Blue (Green-Blue swap)
+        if: success()
+        run: |
+          echo "Switching traffic from Green to Blue..."
+          # Switch traffic
+          # Example: aws route53 change-resource-record-sets
+          # Example: kubectl patch service hr-analytics -p '{"spec":{"selector":{"version":"blue"}}}'
+          
+      - name: Run smoke tests on production
+        run: npm run test:smoke:production
+        
+      - name: Rollback if tests fail
+        if: failure()
+        run: |
+          echo "Rolling back to Green environment..."
+          # Rollback traffic
+          # Example: aws route53 change-resource-record-sets
+          # Example: kubectl patch service hr-analytics -p '{"spec":{"selector":{"version":"green"}}}'
+          
+      - name: Create deployment record
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.ref,
+              environment: 'production',
+              description: 'Production deployment via blue-green strategy',
+              auto_merge: false,
+              required_contexts: []
+            })
+            
+      - name: Notify deployment
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = context.payload.pull_request ? 'Deployed to production' : 'Production deployment completed';
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: 'success',
+              description: status,
+              context: 'deployment/production'
+            })
+
+  # Job 7: Performance Testing
+  performance:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run Lighthouse CI
+        run: npm run lighthouse:ci
+        continue-on-error: true
+        
+      - name: Upload Lighthouse results
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-results
+          path: .lighthouseci/
+          retention-days: 30
+
+  # Job 8: Notify Results
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: [lint, test, build, security]
+    if: always()
+    
+    steps:
+      - name: Determine status
+        id: status
+        run: |
+          if [ "${{ needs.lint.result }}" = "failure" ] || [ "${{ needs.test.result }}" = "failure" ] || [ "${{ needs.build.result }}" = "failure" ]; then
+            echo "status=failure" >> $GITHUB_OUTPUT
+          else
+            echo "status=success" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = '${{ steps.status.outputs.status }}';
+            const emoji = status === 'success' ? '✅' : '❌';
+            const message = `${emoji} CI/CD Pipeline ${status === 'success' ? 'passed' : 'failed'}
+            
+            - Lint: ${{ needs.lint.result }}
+            - Tests: ${{ needs.test.result }}
+            - Build: ${{ needs.build.result }}
+            - Security: ${{ needs.security.result }}`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            })

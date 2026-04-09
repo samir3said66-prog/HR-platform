@@ -4,10 +4,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 /**
  * Input Component
- * 
+ *
  * A reusable input component with validation states and error messages.
  * Implements ControlValueAccessor for reactive forms integration.
- * 
+ *
  * Requirements: 2.3, 8.2, 8.5, 14.1
  */
 @Component({
@@ -16,7 +16,11 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   imports: [CommonModule],
   template: `
     <div class="w-full">
-      <label *ngIf="label" [for]="id" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+      <label
+        *ngIf="label"
+        [for]="id"
+        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+      >
         {{ label }}
         <span *ngIf="required" class="text-red-600" aria-label="required">*</span>
       </label>
@@ -67,7 +71,8 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   getInputClasses(): string {
-    const baseClasses = 'w-full px-3 py-2 border rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-slate-100 disabled:cursor-not-allowed dark:bg-slate-700 dark:text-white dark:border-slate-600';
+    const baseClasses =
+      'w-full px-3 py-2 border rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-slate-100 disabled:cursor-not-allowed dark:bg-slate-700 dark:text-white dark:border-slate-600';
 
     const errorClasses = this.hasError
       ? 'border-red-500 focus:ring-red-500 focus:border-red-500'

@@ -6,10 +6,10 @@ type ButtonSize = 'sm' | 'md' | 'lg';
 
 /**
  * Button Component
- * 
+ *
  * A reusable button component with multiple variants and sizes.
  * Supports primary, secondary, and danger variants.
- * 
+ *
  * Requirements: 2.2, 8.2
  */
 @Component({
@@ -37,7 +37,8 @@ export class ButtonComponent {
   @Output() onClick = new EventEmitter<MouseEvent>();
 
   getButtonClasses(): string {
-    const baseClasses = 'font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+    const baseClasses =
+      'font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
 
     const variantClasses = {
       primary: 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500',

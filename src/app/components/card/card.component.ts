@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 
 /**
  * Card Component
- * 
+ *
  * A reusable card component with header, body, and footer slots.
  * Provides a container for content with consistent styling.
- * 
+ *
  * Requirements: 2.2, 8.2
  */
 @Component({
@@ -21,7 +21,10 @@ import { CommonModule } from '@angular/common';
       <div class="px-6 py-4">
         <ng-content></ng-content>
       </div>
-      <div *ngIf="hasFooter" class="border-t border-slate-200 dark:border-slate-700 px-6 py-4 bg-slate-50 dark:bg-slate-900">
+      <div
+        *ngIf="hasFooter"
+        class="border-t border-slate-200 dark:border-slate-700 px-6 py-4 bg-slate-50 dark:bg-slate-900"
+      >
         <ng-content select="[appCardFooter]"></ng-content>
       </div>
     </div>

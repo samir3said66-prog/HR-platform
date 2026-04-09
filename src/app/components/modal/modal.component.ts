@@ -66,7 +66,12 @@ import { CommonModule } from '@angular/common';
             type="button"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
             </svg>
           </button>
           <ng-content select="[appModalHeader]"></ng-content>
@@ -219,7 +224,7 @@ export class ModalComponent implements AfterViewInit, OnDestroy {
     ];
 
     this.focusableElements = Array.from(
-      this.modalDialog.nativeElement.querySelectorAll(focusableSelectors.join(','))
+      this.modalDialog.nativeElement.querySelectorAll(focusableSelectors.join(',')),
     ).filter((el: any) => {
       return !el.hasAttribute('disabled') && el.offsetParent !== null;
     }) as HTMLElement[];
@@ -256,7 +261,8 @@ export class ModalComponent implements AfterViewInit, OnDestroy {
   }
 
   getActionButtonClasses(variant?: string): string {
-    const baseClasses = 'font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 text-base';
+    const baseClasses =
+      'font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 text-base';
     const variantClasses = {
       primary: 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500',
       secondary: 'bg-slate-200 text-slate-900 hover:bg-slate-300 focus:ring-slate-500',

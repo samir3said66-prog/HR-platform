@@ -1,0 +1,15 @@
+{
+  "totalHeadcount": 12000,
+  "activeEmployees": 11850,
+  "onLeave": 150,
+  "newHires": 45,
+  "departures": 28,
+  "averagePerformance": 79,
+  "highPerformers": 805,
+  "needsImprovement": 165,
+  "reviewsCompleted": 94,
+  "turnoverRate": 2.3,
+  "averageTenure": 5.2,
+  "highRiskRoles": 12,
+  "lastUpdated": "2024-01-15T10:30:00Z"
+}

@@ -8,4 +8,9 @@ export { ThemeService } from './theme.service';
 export { WebSocketService } from './websocket.service';
 
 // Report Service
-export { ReportService, type ReportConfig, type ReportMetric, type ReportData } from './report.service';
+export {
+  ReportService,
+  type ReportConfig,
+  type ReportMetric,
+  type ReportData,
+} from './report.service';

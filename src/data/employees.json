@@ -1,0 +1,122 @@
+[
+  {
+    "id": "EMP001",
+    "name": "Ahmed Hassan",
+    "email": "ahmed.hassan@company.com",
+    "department": "Engineering",
+    "region": "Middle East",
+    "role": "Senior Software Engineer",
+    "status": "active",
+    "performanceScore": 92,
+    "hireDate": "2020-03-15",
+    "salary": 120000
+  },
+  {
+    "id": "EMP002",
+    "name": "Fatima Al-Mansouri",
+    "email": "fatima.mansouri@company.com",
+    "department": "Sales",
+    "region": "Middle East",
+    "role": "Sales Manager",
+    "status": "active",
+    "performanceScore": 85,
+    "hireDate": "2019-06-20",
+    "salary": 95000
+  },
+  {
+    "id": "EMP003",
+    "name": "Mohammed Al-Zahra",
+    "email": "mohammed.zahra@company.com",
+    "department": "HR",
+    "region": "Middle East",
+    "role": "HR Specialist",
+    "status": "active",
+    "performanceScore": 78,
+    "hireDate": "2021-01-10",
+    "salary": 65000
+  },
+  {
+    "id": "EMP004",
+    "name": "Layla Al-Rashid",
+    "email": "layla.rashid@company.com",
+    "department": "Marketing",
+    "region": "Europe",
+    "role": "Marketing Director",
+    "status": "active",
+    "performanceScore": 88,
+    "hireDate": "2018-09-05",
+    "salary": 110000
+  },
+  {
+    "id": "EMP005",
+    "name": "Omar Al-Kaabi",
+    "email": "omar.kaabi@company.com",
+    "department": "Finance",
+    "region": "Middle East",
+    "role": "Financial Analyst",
+    "status": "on_leave",
+    "performanceScore": 82,
+    "hireDate": "2020-11-12",
+    "salary": 75000
+  },
+  {
+    "id": "EMP006",
+    "name": "Noor Al-Mazrouei",
+    "email": "noor.mazrouei@company.com",
+    "department": "Engineering",
+    "region": "Middle East",
+    "role": "DevOps Engineer",
+    "status": "active",
+    "performanceScore": 90,
+    "hireDate": "2021-05-18",
+    "salary": 105000
+  },
+  {
+    "id": "EMP007",
+    "name": "Zainab Al-Hosani",
+    "email": "zainab.hosani@company.com",
+    "department": "Operations",
+    "region": "Europe",
+    "role": "Operations Manager",
+    "status": "active",
+    "performanceScore": 86,
+    "hireDate": "2019-02-28",
+    "salary": 92000
+  },
+  {
+    "id": "EMP008",
+    "name": "Khalid Al-Mansoori",
+    "email": "khalid.mansoori@company.com",
+    "department": "Engineering",
+    "region": "Middle East",
+    "role": "QA Engineer",
+    "status": "active",
+    "performanceScore": 79,
+    "hireDate": "2021-08-22",
+    "salary": 80000
+  },
+  {
+    "id": "EMP009",
+    "name": "Hana Al-Suwaidi",
+    "email": "hana.suwaidi@company.com",
+    "department": "Sales",
+    "region": "Middle East",
+    "role": "Sales Executive",
+    "status": "active",
+    "performanceScore": 81,
+    "hireDate": "2020-07-14",
+    "salary": 70000
+  },
+  {
+    "id": "EMP010",
+    "name": "Samir Al-Qasimi",
+    "email": "samir.qasimi@company.com",
+    "department": "Engineering",
+    "region": "Europe",
+    "role": "Tech Lead",
+    "status": "active",
+    "performanceScore": 95,
+    "hireDate": "2017-04-10",
+    "salary": 135000
+  }
+]

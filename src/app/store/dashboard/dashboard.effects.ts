@@ -6,36 +6,38 @@ import * as DashboardActions from './dashboard.actions';
 
 /**
  * DashboardEffects handles side effects for dashboard-related operations.
- * 
+ *
  * Effects implemented:
  * - loadDashboardConfigs$: Loads dashboard configurations from API
  * - loadDashboardMetrics$: Loads dashboard metrics from API
  * - createDashboardConfig$: Creates a new dashboard configuration
  * - updateDashboardConfig$: Updates an existing dashboard configuration
  * - deleteDashboardConfig$: Deletes a dashboard configuration
- * 
+ *
  * Error Handling Strategy:
  * - Implements retry logic with exponential backoff
  * - Catches errors and dispatches failure actions
  * - Logs errors for debugging and monitoring
  * - Provides sensible defaults on failure
- * 
+ *
  * Requirements: 12.5, 12.6
  */
 @Injectable()
 export class DashboardEffects {
+  constructor(private actions$: Actions) {}
+
   /**
    * Effect: Load Dashboard Configs
-   * 
+   *
    * Triggers when loadDashboardConfigs action is dispatched.
    * Fetches dashboard configurations from API with retry logic.
-   * 
+   *
    * Success: Dispatches loadDashboardConfigsSuccess with configs data
    * Failure: Dispatches loadDashboardConfigsFailure with error message
-   * 
+   *
    * Retry Strategy: 3 attempts with exponential backoff
    */
-  loadDashboardConfigs$ = createEffect(() =>
+  readonly loadDashboardConfigs$ = createEffect(() =>
     this.actions$.pipe(
       ofType(DashboardActions.loadDashboardConfigs),
       switchMap(() =>
@@ -55,7 +57,10 @@ export class DashboardEffects {
           }),
           map((configs) => DashboardActions.loadDashboardConfigsSuccess({ configs })),
           catchError((error) => {
-            console.error('[DashboardEffects] Failed to load dashboard configs after retries:', error);
+            console.error(
+              '[DashboardEffects] Failed to load dashboard configs after retries:',
+              error,
+            );
             return of(
               DashboardActions.loadDashboardConfigsFailure({
                 error: error.message || 'Failed to load dashboard configurations',
@@ -69,16 +74,16 @@ export class DashboardEffects {
 
   /**
    * Effect: Load Dashboard Metrics
-   * 
+   *
    * Triggers when loadDashboardMetrics action is dispatched.
    * Fetches dashboard metrics from API with retry logic.
-   * 
+   *
    * Success: Dispatches loadDashboardMetricsSuccess with metrics data
    * Failure: Dispatches loadDashboardMetricsFailure with error message
-   * 
+   *
    * Retry Strategy: 3 attempts with exponential backoff
    */
-  loadDashboardMetrics$ = createEffect(() =>
+  readonly loadDashboardMetrics$ = createEffect(() =>
     this.actions$.pipe(
       ofType(DashboardActions.loadDashboardMetrics),
       switchMap(() => {
@@ -106,7 +111,10 @@ export class DashboardEffects {
           }),
           map((metrics) => DashboardActions.loadDashboardMetricsSuccess({ metrics })),
           catchError((error) => {
-            console.error('[DashboardEffects] Failed to load dashboard metrics after retries:', error);
+            console.error(
+              '[DashboardEffects] Failed to load dashboard metrics after retries:',
+              error,
+            );
             return of(
               DashboardActions.loadDashboardMetricsFailure({
                 error: error.message || 'Failed to load dashboard metrics',
@@ -120,16 +128,16 @@ export class DashboardEffects {
 
   /**
    * Effect: Create Dashboard Config
-   * 
+   *
    * Triggers when createDashboardConfig action is dispatched.
    * Sends new dashboard configuration to API.
-   * 
+   *
    * Success: Dispatches loadDashboardConfigs to refresh the list
    * Failure: Dispatches loadDashboardConfigsFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  createDashboardConfig$ = createEffect(() =>
+  readonly createDashboardConfig$ = createEffect(() =>
     this.actions$.pipe(
       ofType(DashboardActions.createDashboardConfig),
       switchMap(({ config }) =>
@@ -164,16 +172,16 @@ export class DashboardEffects {
 
   /**
    * Effect: Update Dashboard Config
-   * 
+   *
    * Triggers when updateDashboardConfig action is dispatched.
    * Sends updated dashboard configuration to API.
-   * 
+   *
    * Success: Dispatches loadDashboardConfigs to refresh the list
    * Failure: Dispatches loadDashboardConfigsFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  updateDashboardConfig$ = createEffect(() =>
+  readonly updateDashboardConfig$ = createEffect(() =>
     this.actions$.pipe(
       ofType(DashboardActions.updateDashboardConfig),
       switchMap(({ config }) =>
@@ -208,16 +216,16 @@ export class DashboardEffects {
 
   /**
    * Effect: Delete Dashboard Config
-   * 
+   *
    * Triggers when deleteDashboardConfig action is dispatched.
    * Sends delete request to API.
-   * 
+   *
    * Success: Dispatches loadDashboardConfigs to refresh the list
    * Failure: Dispatches loadDashboardConfigsFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  deleteDashboardConfig$ = createEffect(() =>
+  readonly deleteDashboardConfig$ = createEffect(() =>
     this.actions$.pipe(
       ofType(DashboardActions.deleteDashboardConfig),
       switchMap(({ configId }) =>
@@ -249,6 +257,4 @@ export class DashboardEffects {
       ),
     ),
   );
-
-  constructor(private actions$: Actions) {}
 }

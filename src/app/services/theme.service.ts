@@ -4,11 +4,11 @@ type Theme = 'light' | 'dark';
 
 /**
  * Theme Service
- * 
+ *
  * Manages dark mode and light mode themes.
  * Persists theme preference to local storage.
  * Applies theme to DOM using Tailwind CSS class strategy.
- * 
+ *
  * Requirements: 10.1, 10.2, 10.3, 10.4, 10.5
  */
 @Injectable({

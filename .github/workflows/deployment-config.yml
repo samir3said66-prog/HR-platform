@@ -1,0 +1,53 @@
+name: Deployment Configuration
+
+# This file documents the deployment strategy and configuration
+# for the HR Analytics Platform CI/CD pipeline
+
+# Deployment Environments:
+# 1. Development (automatic on feature branches)
+# 2. Staging (automatic on develop branch)
+# 3. Production (manual approval on main branch with blue-green strategy)
+
+# Blue-Green Deployment Strategy:
+# - Blue: Current production environment (Green)
+# - Green: New production environment (Blue)
+# - Traffic is switched from Green to Blue after health checks pass
+# - Rollback is automatic if health checks fail
+
+# Environment Variables:
+# STAGING_BUCKET: s3://hr-analytics-staging/
+# PROD_BLUE_BUCKET: s3://hr-analytics-prod-blue/
+# PROD_GREEN_BUCKET: s3://hr-analytics-prod-green/
+# STAGING_URL: https://staging.hr-analytics.example.com
+# PRODUCTION_URL: https://hr-analytics.example.com
+
+# Deployment Triggers:
+# - Push to main: Deploy to production (blue-green)
+# - Push to develop: Deploy to staging
+# - Push to feature branches: Deploy to development
+# - Pull requests: Run tests and security checks
+
+# Required Secrets (configure in GitHub):
+# - AWS_ACCESS_KEY_ID
+# - AWS_SECRET_ACCESS_KEY
+# - DOCKER_USERNAME
+# - DOCKER_PASSWORD
+# - SLACK_WEBHOOK_URL (for notifications)
+# - SENTRY_AUTH_TOKEN (for error tracking)
+
+# Health Check Endpoints:
+# - /api/health - Basic health check
+# - /api/health/db - Database connectivity
+# - /api/health/cache - Cache connectivity
+# - /api/health/websocket - WebSocket connectivity
+
+# Rollback Procedure:
+# 1. Automatic rollback if health checks fail
+# 2. Manual rollback: kubectl rollout undo deployment/hr-analytics
+# 3. Traffic switch back to Green environment
+
+# Monitoring:
+# - Sentry for error tracking
+# - CloudWatch for logs
+# - Prometheus for metrics
+# - Grafana for dashboards

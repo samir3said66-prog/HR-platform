@@ -7,10 +7,10 @@ import { Employee } from './employees.state';
 
 /**
  * Test Suite: Concurrent Updates & Optimistic Updates
- * 
+ *
  * Tests for handling concurrent updates to the same employee record
  * and optimistic update reconciliation with server state.
- * 
+ *
  * **Validates: Requirements 21.1, 21.2, 5.6, 5.7**
  */
 describe('Concurrent Updates & Optimistic Updates', () => {
@@ -50,13 +50,15 @@ describe('Concurrent Updates & Optimistic Updates', () => {
       providers: [provideMockStore({ initialState })],
     });
     store = TestBed.inject(MockStore);
+    // Spy on dispatch method
+    vi.spyOn(store, 'dispatch');
   });
 
   describe('Property 6: Concurrent Update Consistency', () => {
     /**
      * **Property 6: Concurrent Update Consistency**
      * Concurrent updates to same record produce consistent final state
-     * 
+     *
      * When multiple updates are made to the same employee record concurrently,
      * the final state should be consistent and predictable. Updates should be
      * applied in order with proper conflict resolution.
@@ -85,8 +87,13 @@ describe('Concurrent Updates & Optimistic Updates', () => {
       store.dispatch(EmployeeActions.updateEmployee({ employee: update2 }));
       store.dispatch(EmployeeActions.updateEmployee({ employee: update3 }));
 
-      // All updates should be queued and processed
+      // Verify all updates were dispatched
       expect(store.dispatch).toHaveBeenCalledTimes(3);
+      
+      // Verify dispatch was called with correct actions
+      expect(store.dispatch).toHaveBeenNthCalledWith(1, expect.objectContaining({
+        type: EmployeeActions.updateEmployee.type
+      }));
     });
 
     it('should maintain data consistency with multiple concurrent updates', () => {
@@ -114,11 +121,20 @@ describe('Concurrent Updates & Optimistic Updates', () => {
       ];
 
       // Simulate concurrent updates to different employees
-      store.dispatch(EmployeeActions.updateEmployee({ employee: { ...employees[0], role: 'Lead' } }));
-      store.dispatch(EmployeeActions.updateEmployee({ employee: { ...employees[1], role: 'Director' } }));
+      store.dispatch(
+        EmployeeActions.updateEmployee({ employee: { ...employees[0], role: 'Lead' } }),
+      );
+      store.dispatch(
+        EmployeeActions.updateEmployee({ employee: { ...employees[1], role: 'Director' } }),
+      );
 
       // Both updates should be processed
       expect(store.dispatch).toHaveBeenCalledTimes(2);
+      
+      // Verify both employees were updated
+      const calls = (store.dispatch as any).mock.calls;
+      expect(calls[0][0].payload.employee.id).toBe('emp-1');
+      expect(calls[1][0].payload.employee.id).toBe('emp-2');
     });
 
     it('should handle rapid sequential updates to same record', () => {
@@ -165,8 +181,12 @@ describe('Concurrent Updates & Optimistic Updates', () => {
       store.dispatch(EmployeeActions.updateEmployee({ employee: update1 }));
       store.dispatch(EmployeeActions.updateEmployee({ employee: update2 }));
 
-      // Last update should win (or server-side conflict resolution)
+      // Both updates should be dispatched (conflict resolution happens in reducer)
       expect(store.dispatch).toHaveBeenCalledTimes(2);
+      
+      // Verify the second update was the last one dispatched
+      const calls = (store.dispatch as any).mock.calls;
+      expect(calls[1][0].payload.employee.role).toBe('Principal Engineer');
     });
 
     it('should maintain consistency across multiple fields in concurrent updates', () => {
@@ -189,6 +209,11 @@ describe('Concurrent Updates & Optimistic Updates', () => {
       store.dispatch(EmployeeActions.updateEmployee({ employee: update2 }));
 
       expect(store.dispatch).toHaveBeenCalledTimes(2);
+      
+      // Verify both updates have the same employee ID
+      const calls = (store.dispatch as any).mock.calls;
+      expect(calls[0][0].payload.employee.id).toBe('emp-1');
+      expect(calls[1][0].payload.employee.id).toBe('emp-1');
     });
   });
 
@@ -196,7 +221,7 @@ describe('Concurrent Updates & Optimistic Updates', () => {
     /**
      * **Property 7: Optimistic Update Reconciliation**
      * Optimistic updates reconcile correctly with server state
-     * 
+     *
      * When an optimistic update is made on the client, and the server
      * responds with a different state, the client should reconcile the
      * difference correctly without data loss or inconsistency.

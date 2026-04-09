@@ -1,4 +1,15 @@
-import { Component, Input, Output, EventEmitter, OnInit, signal, computed, HostListener, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  signal,
+  computed,
+  HostListener,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -16,10 +27,10 @@ export interface SelectOptionGroup {
 
 /**
  * Select Component
- * 
+ *
  * A reusable select component with single/multi-select modes, search functionality,
  * and proper ARIA labels and keyboard navigation.
- * 
+ *
  * Requirements: 2.3, 8.2, 8.3, 14.1, 14.2
  */
 @Component({
@@ -28,10 +39,14 @@ export interface SelectOptionGroup {
   imports: [CommonModule, FormsModule],
   template: `
     <div class="relative w-full">
-      <label *ngIf="label" [for]="id" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+      <label
+        *ngIf="label"
+        [for]="id"
+        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+      >
         {{ label }}
       </label>
-      
+
       <div class="relative">
         <button
           [id]="id"
@@ -48,8 +63,19 @@ export interface SelectOptionGroup {
           <span class="flex-1 text-left truncate">
             {{ getDisplayValue() }}
           </span>
-          <svg class="w-5 h-5 ml-2 transition-transform" [class.rotate-180]="isOpen()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          <svg
+            class="w-5 h-5 ml-2 transition-transform"
+            [class.rotate-180]="isOpen()"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            ></path>
           </svg>
         </button>
 
@@ -76,7 +102,10 @@ export interface SelectOptionGroup {
         >
           <!-- Option Groups -->
           <div *ngFor="let group of groupedOptions()" class="py-1">
-            <div *ngIf="group.label" class="px-3 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <div
+              *ngIf="group.label"
+              class="px-3 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
+            >
               {{ group.label }}
             </div>
             <button
@@ -104,7 +133,10 @@ export interface SelectOptionGroup {
           </div>
 
           <!-- No Results -->
-          <div *ngIf="groupedOptions().length === 0" class="px-3 py-2 text-slate-500 dark:text-slate-400">
+          <div
+            *ngIf="groupedOptions().length === 0"
+            class="px-3 py-2 text-slate-500 dark:text-slate-400"
+          >
             No options found
           </div>
         </div>
@@ -153,7 +185,7 @@ export class SelectComponent implements OnInit {
 
     if (this.multiple) {
       const values = this.selectedValues();
-      const index = values.findIndex(v => v === option.value);
+      const index = values.findIndex((v) => v === option.value);
       if (index > -1) {
         values.splice(index, 1);
       } else {
@@ -177,7 +209,7 @@ export class SelectComponent implements OnInit {
     if (values.length === 0) return this.placeholder;
 
     const labels = values
-      .map(v => this.options.find(o => o.value === v)?.label)
+      .map((v) => this.options.find((o) => o.value === v)?.label)
       .filter(Boolean);
 
     if (this.multiple) {
@@ -191,13 +223,13 @@ export class SelectComponent implements OnInit {
 
     if (this.searchQuery()) {
       const query = this.searchQuery().toLowerCase();
-      filtered = filtered.filter(o => o.label.toLowerCase().includes(query));
+      filtered = filtered.filter((o) => o.label.toLowerCase().includes(query));
     }
 
     const groups: SelectOptionGroup[] = [];
     const grouped = new Map<string, SelectOption[]>();
 
-    filtered.forEach(option => {
+    filtered.forEach((option) => {
       const groupLabel = option.group || '';
       if (!grouped.has(groupLabel)) {
         grouped.set(groupLabel, []);
@@ -240,7 +272,7 @@ export class SelectComponent implements OnInit {
       case 'Enter':
       case ' ':
         event.preventDefault();
-        const options = this.groupedOptions().flatMap(g => g.options);
+        const options = this.groupedOptions().flatMap((g) => g.options);
         if (options[index]) {
           this.selectOption(options[index]);
         }

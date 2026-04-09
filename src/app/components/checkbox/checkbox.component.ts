@@ -6,10 +6,10 @@ type CheckboxState = 'checked' | 'unchecked' | 'indeterminate';
 
 /**
  * Checkbox Component
- * 
+ *
  * A reusable checkbox component with support for checked, unchecked, and indeterminate states.
  * Includes proper ARIA attributes and keyboard navigation.
- * 
+ *
  * Requirements: 2.3, 8.2, 8.3, 14.1, 14.2
  */
 @Component({
@@ -54,7 +54,7 @@ export class CheckboxComponent {
 
   onChange(event: Event) {
     const target = event.target as HTMLInputElement;
-    
+
     // Cycle through states: unchecked -> checked -> indeterminate -> unchecked
     let newState: CheckboxState;
     if (this.state() === 'unchecked') {

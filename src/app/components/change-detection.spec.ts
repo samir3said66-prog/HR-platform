@@ -4,10 +4,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 /**
  * Test Suite: Change Detection Strategy
- * 
+ *
  * Tests for OnPush change detection strategy and Angular Signals API.
  * Validates that change detection is optimized and Signals trigger updates correctly.
- * 
+ *
  * **Validates: Requirements 11.3, 11.6, 6.1**
  */
 
@@ -28,23 +28,6 @@ class TestOnPushComponent {
 
   increment() {
     this.count.set(this.count() + 1);
-  }
-}
-
-// Test component with default change detection
-@Component({
-  selector: 'app-test-default',
-  template: `
-    <div class="counter">{{ count }}</div>
-    <button (click)="increment()">Increment</button>
-  `,
-  standalone: true,
-})
-class TestDefaultComponent {
-  count = 0;
-
-  increment() {
-    this.count++;
   }
 }
 
@@ -176,7 +159,7 @@ describe('Change Detection Strategy', () => {
   });
 
   describe('Effect Hook', () => {
-    it('should run effect when signal changes', () => {
+    it('should run effect when signal changes', async () => {
       const effectFn = vi.fn();
       const count = signal(0);
 
@@ -186,26 +169,47 @@ describe('Change Detection Strategy', () => {
         });
       });
 
+      // Give effect time to run
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
       expect(effectFn).toHaveBeenCalledWith(0);
-
-      count.set(1);
-      expect(effectFn).toHaveBeenCalledWith(1);
-    });
-
-    it('should run effect only when signal value changes', () => {
-      const effectFn = vi.fn();
-      const count = signal(0);
-
-      TestBed.runInInjectionContext(() => {
-        effect(() => {
-          effectFn(count());
-        });
-      });
-
       expect(effectFn).toHaveBeenCalledTimes(1);
 
-      // Setting same value
+      count.set(1);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      expect(effectFn).toHaveBeenCalledWith(1);
+      expect(effectFn).toHaveBeenCalledTimes(2);
+    });
+
+    it('should run effect only when signal value changes', async () => {
+      const effectFn = vi.fn();
+      const count = signal(0);
+
+      TestBed.runInInjectionContext(() => {
+        effect(() => {
+          effectFn(count());
+        });
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      expect(effectFn).toHaveBeenCalledTimes(1);
+
+      // Setting same value - effect does NOT run (signals deduplicate by default)
       count.set(0);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      // Still 1 because same value
+      expect(effectFn).toHaveBeenCalledTimes(1);
+      
+      // Setting different value
+      count.set(1);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
       expect(effectFn).toHaveBeenCalledTimes(2);
     });
   });
@@ -301,7 +305,7 @@ describe('Change Detection Strategy', () => {
   });
 
   describe('Signal Reactivity', () => {
-    it('should react to signal changes immediately', () => {
+    it('should react to signal changes immediately', async () => {
       const count = signal(0);
       const values: number[] = [];
 
@@ -311,16 +315,24 @@ describe('Change Detection Strategy', () => {
         });
       });
 
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
       expect(values).toEqual([0]);
 
       count.set(1);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
       expect(values).toEqual([0, 1]);
 
       count.set(2);
+      
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
       expect(values).toEqual([0, 1, 2]);
     });
 
-    it('should handle signal updates in batch', () => {
+    it('should handle signal updates in batch', async () => {
       const count = signal(0);
       const updates: number[] = [];
 
@@ -330,11 +342,15 @@ describe('Change Detection Strategy', () => {
         });
       });
 
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
       // Multiple updates
       count.set(1);
       count.set(2);
       count.set(3);
 
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
       expect(updates).toEqual([0, 1, 2, 3]);
     });
   });

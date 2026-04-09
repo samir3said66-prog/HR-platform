@@ -10,10 +10,10 @@ export interface RadioOption {
 
 /**
  * Radio Component
- * 
+ *
  * A reusable radio button group component with proper ARIA attributes
  * and keyboard navigation support.
- * 
+ *
  * Requirements: 2.3, 8.2, 8.3, 14.1, 14.2
  */
 @Component({
@@ -25,7 +25,7 @@ export interface RadioOption {
       <legend *ngIf="label" class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
         {{ label }}
       </legend>
-      
+
       <div role="radiogroup" [attr.aria-label]="ariaLabel || label" [attr.aria-disabled]="disabled">
         <div *ngFor="let option of options; let idx = index" class="flex items-center">
           <input
@@ -71,7 +71,7 @@ export class RadioComponent {
   }
 
   onKeydown(event: KeyboardEvent, index: number) {
-    const options = this.options.filter(o => !o.disabled && !this.disabled);
+    const options = this.options.filter((o) => !o.disabled && !this.disabled);
     if (options.length === 0) return;
 
     let newIndex = index;
@@ -96,7 +96,9 @@ export class RadioComponent {
       this.onSelectionChange(nextOption.value);
       // Focus the next radio button
       setTimeout(() => {
-        const nextInput = document.getElementById(this.id + '-' + this.options.indexOf(nextOption)) as HTMLInputElement;
+        const nextInput = document.getElementById(
+          this.id + '-' + this.options.indexOf(nextOption),
+        ) as HTMLInputElement;
         nextInput?.focus();
       });
     }

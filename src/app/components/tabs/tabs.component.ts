@@ -69,7 +69,10 @@ export class TabPanelDirective {
           type="button"
         >
           {{ tab.label }}
-          <span *ngIf="tab.badge" class="ml-2 text-xs bg-indigo-600 text-white px-2 py-0.5 rounded-full">
+          <span
+            *ngIf="tab.badge"
+            class="ml-2 text-xs bg-indigo-600 text-white px-2 py-0.5 rounded-full"
+          >
             {{ tab.badge }}
           </span>
         </button>

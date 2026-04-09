@@ -31,9 +31,7 @@ import { BadgeComponent } from '../../components/badge/badge.component';
       <!-- Parameter Adjustment Section -->
       <app-card>
         <div class="space-y-4">
-          <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
-            Forecast Parameters
-          </h2>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Forecast Parameters</h2>
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -123,9 +121,7 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             <p class="text-3xl font-bold text-red-600 dark:text-red-400 mt-2">
               {{ criticalRolesAtRisk() }}
             </p>
-            <app-badge variant="error" class="mt-3 justify-center">
-              Requires attention
-            </app-badge>
+            <app-badge variant="error" class="mt-3 justify-center"> Requires attention </app-badge>
           </div>
         </app-card>
 
@@ -264,7 +260,9 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             Critical Roles with High Turnover Risk
           </h2>
           <div class="space-y-3">
-            <div class="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+            <div
+              class="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-lg"
+            >
               <div>
                 <p class="font-semibold text-slate-900 dark:text-white">Senior Developer</p>
                 <p class="text-sm text-slate-600 dark:text-slate-400">
@@ -274,7 +272,9 @@ import { BadgeComponent } from '../../components/badge/badge.component';
               <app-badge variant="error">High Risk</app-badge>
             </div>
 
-            <div class="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+            <div
+              class="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg"
+            >
               <div>
                 <p class="font-semibold text-slate-900 dark:text-white">Sales Manager</p>
                 <p class="text-sm text-slate-600 dark:text-slate-400">
@@ -284,7 +284,9 @@ import { BadgeComponent } from '../../components/badge/badge.component';
               <app-badge variant="warning">Medium Risk</app-badge>
             </div>
 
-            <div class="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+            <div
+              class="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg"
+            >
               <div>
                 <p class="font-semibold text-slate-900 dark:text-white">Product Manager</p>
                 <p class="text-sm text-slate-600 dark:text-slate-400">
@@ -349,14 +351,7 @@ export class HiringForecastComponent implements OnInit {
     type: 'bar',
     title: '12-Month Hiring Forecast by Department',
     data: {
-      categories: [
-        'Engineering',
-        'Sales',
-        'Marketing',
-        'HR',
-        'Finance',
-        'Operations',
-      ],
+      categories: ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations'],
       values: [145, 98, 65, 32, 48, 87],
     },
     height: '400px',

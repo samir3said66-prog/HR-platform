@@ -44,7 +44,12 @@ import { CommonModule } from '@angular/common';
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+          ></path>
         </svg>
       </button>
 
@@ -74,7 +79,10 @@ import { CommonModule } from '@angular/common';
             >
               <svg *ngIf="item.icon" class="w-4 h-4" [innerHTML]="item.icon"></svg>
               <span>{{ item.label }}</span>
-              <span *ngIf="item.badge" class="ml-auto text-xs bg-indigo-600 text-white px-2 py-1 rounded">
+              <span
+                *ngIf="item.badge"
+                class="ml-auto text-xs bg-indigo-600 text-white px-2 py-1 rounded"
+              >
                 {{ item.badge }}
               </span>
             </button>
@@ -101,7 +109,12 @@ import { CommonModule } from '@angular/common';
                   {{ item.label }}
                 </span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  ></path>
                 </svg>
               </button>
 

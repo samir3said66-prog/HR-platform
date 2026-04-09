@@ -213,14 +213,7 @@ export class WorkforceComponent implements OnInit {
     type: 'bar',
     title: 'Headcount by Department',
     data: {
-      categories: [
-        'Engineering',
-        'Sales',
-        'Marketing',
-        'HR',
-        'Finance',
-        'Operations',
-      ],
+      categories: ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations'],
       values: [2400, 2100, 1800, 1200, 1500, 3000],
     },
     height: '400px',

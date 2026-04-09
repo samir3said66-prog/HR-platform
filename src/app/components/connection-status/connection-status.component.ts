@@ -4,10 +4,10 @@ import { WebSocketService } from '../../services/websocket.service';
 
 /**
  * Connection Status Indicator Component
- * 
+ *
  * Displays the current WebSocket connection status.
  * Shows visual indicators for connected, disconnected, and reconnecting states.
- * 
+ *
  * Requirements: 5.3, 5.4
  */
 @Component({
@@ -15,7 +15,10 @@ import { WebSocketService } from '../../services/websocket.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium" [ngClass]="getStatusClasses()">
+    <div
+      class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium"
+      [ngClass]="getStatusClasses()"
+    >
       <div class="w-2 h-2 rounded-full" [ngClass]="getIndicatorClasses()"></div>
       <span>{{ getStatusText() }}</span>
     </div>

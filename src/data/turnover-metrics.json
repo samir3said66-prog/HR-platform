@@ -1,0 +1,47 @@
+{
+  "currentRate": 2.3,
+  "departuresThisMonth": 28,
+  "averageTenure": 5.2,
+  "highRiskRoles": 12,
+  "byDepartment": [
+    { "department": "Engineering", "rate": 1.8, "departures": 8 },
+    { "department": "Sales", "rate": 3.2, "departures": 10 },
+    { "department": "Marketing", "rate": 2.1, "departures": 3 },
+    { "department": "HR", "rate": 1.5, "departures": 1 },
+    { "department": "Finance", "rate": 2.0, "departures": 3 },
+    { "department": "Operations", "rate": 2.5, "departures": 3 }
+  ],
+  "byRegion": [
+    { "region": "Middle East", "rate": 2.2, "departures": 18 },
+    { "region": "Europe", "rate": 2.5, "departures": 10 }
+  ],
+  "byRole": [
+    { "role": "Sales Executive", "rate": 4.2, "departures": 5 },
+    { "role": "Junior Developer", "rate": 3.8, "departures": 4 },
+    { "role": "Support Specialist", "rate": 3.5, "departures": 3 },
+    { "role": "QA Engineer", "rate": 2.1, "departures": 2 },
+    { "role": "Senior Engineer", "rate": 1.2, "departures": 1 }
+  ],
+  "trends": [
+    { "month": "Jan", "rate": 2.1 },
+    { "month": "Feb", "rate": 2.2 },
+    { "month": "Mar", "rate": 2.1 },
+    { "month": "Apr", "rate": 2.3 },
+    { "month": "May", "rate": 2.2 },
+    { "month": "Jun", "rate": 2.4 },
+    { "month": "Jul", "rate": 2.3 },
+    { "month": "Aug", "rate": 2.5 },
+    { "month": "Sep", "rate": 2.4 },
+    { "month": "Oct", "rate": 2.3 },
+    { "month": "Nov", "rate": 2.3 },
+    { "month": "Dec", "rate": 2.3 }
+  ],
+  "forecast6Month": [
+    { "month": "Jan", "predicted": 2.2, "confidence": 92 },
+    { "month": "Feb", "predicted": 2.3, "confidence": 88 },
+    { "month": "Mar", "predicted": 2.4, "confidence": 85 },
+    { "month": "Apr", "predicted": 2.3, "confidence": 82 },
+    { "month": "May", "predicted": 2.2, "confidence": 78 },
+    { "month": "Jun", "predicted": 2.1, "confidence": 75 }
+  ]
+}

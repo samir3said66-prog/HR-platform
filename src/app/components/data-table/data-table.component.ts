@@ -47,9 +47,13 @@ export interface SortState {
   imports: [CommonModule, ScrollingModule, FormsModule, ButtonComponent, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-lg">
+    <div
+      class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-lg"
+    >
       <!-- Table Header with Controls -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+      <div
+        class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700"
+      >
         <div class="flex items-center gap-4">
           <h3 class="text-lg font-semibold text-slate-900 dark:text-white">
             {{ title }}
@@ -76,7 +80,9 @@ export interface SortState {
       <div class="flex-1 overflow-hidden">
         <div class="flex flex-col h-full">
           <!-- Column Headers -->
-          <div class="flex bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+          <div
+            class="flex bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10"
+          >
             <div class="w-12 px-4 py-3 flex items-center justify-center">
               <input
                 type="checkbox"
@@ -98,7 +104,10 @@ export interface SortState {
                 [attr.aria-label]="'Sort by ' + column.label"
               >
                 {{ column.label }}
-                <span *ngIf="sortState().column === column.key" class="text-indigo-600 dark:text-indigo-400">
+                <span
+                  *ngIf="sortState().column === column.key"
+                  class="text-indigo-600 dark:text-indigo-400"
+                >
                   {{ sortState().direction === 'asc' ? '↑' : '↓' }}
                 </span>
               </button>
@@ -113,7 +122,10 @@ export interface SortState {
             class="flex-1"
             [attr.aria-label]="'Data table with ' + filteredData().length + ' rows'"
           >
-            <div *cdkVirtualFor="let row of paginatedData()" class="flex border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            <div
+              *cdkVirtualFor="let row of paginatedData()"
+              class="flex border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+            >
               <div class="w-12 px-4 py-3 flex items-center justify-center">
                 <input
                   type="checkbox"
@@ -142,29 +154,40 @@ export interface SortState {
             </div>
 
             <!-- Expandable Row Details -->
-            <div
-              *ngIf="isRowExpanded(row.id)"
-              *ngFor="let row of paginatedData()"
-              class="bg-slate-50 dark:bg-slate-900 px-4 py-4 border-b border-slate-200 dark:border-slate-700"
-            >
-              <ng-container *ngIf="expandedRowTemplate">
-                <ng-container *ngTemplateOutlet="expandedRowTemplate; context: { $implicit: row }"></ng-container>
-              </ng-container>
-              <div *ngIf="!expandedRowTemplate" class="text-sm text-slate-600 dark:text-slate-400">
-                <div *ngFor="let column of columns" class="flex justify-between py-1">
-                  <span class="font-medium">{{ column.label }}:</span>
-                  <span>{{ column.template ? column.template(row[column.key], row) : row[column.key] }}</span>
+            <ng-container *ngFor="let row of paginatedData()">
+              <div
+                *ngIf="isRowExpanded(row.id)"
+                class="bg-slate-50 dark:bg-slate-900 px-4 py-4 border-b border-slate-200 dark:border-slate-700"
+              >
+                <ng-container *ngIf="expandedRowTemplate">
+                  <ng-container
+                    *ngTemplateOutlet="expandedRowTemplate; context: { $implicit: row }"
+                  ></ng-container>
+                </ng-container>
+                <div
+                  *ngIf="!expandedRowTemplate"
+                  class="text-sm text-slate-600 dark:text-slate-400"
+                >
+                  <div *ngFor="let column of columns" class="flex justify-between py-1">
+                    <span class="font-medium">{{ column.label }}:</span>
+                    <span>{{
+                      column.template ? column.template(row[column.key], row) : row[column.key]
+                    }}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </ng-container>
           </cdk-virtual-scroll-viewport>
         </div>
       </div>
 
       <!-- Pagination Controls -->
-      <div class="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+      <div
+        class="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+      >
         <div class="text-sm text-slate-600 dark:text-slate-400">
-          Showing {{ currentPageStart() + 1 }} to {{ currentPageEnd() }} of {{ filteredData().length }}
+          Showing {{ currentPageStart() + 1 }} to {{ currentPageEnd() }} of
+          {{ filteredData().length }}
         </div>
         <div class="flex items-center gap-2">
           <button
@@ -214,10 +237,11 @@ export class DataTableComponent implements OnInit, OnDestroy {
 
     // Apply sorting
     const sort = this.sortState();
-    if (sort.column) {
+    if (sort.column !== null) {
+      const column = sort.column;
       result.sort((a, b) => {
-        const aVal = a[sort.column];
-        const bVal = b[sort.column];
+        const aVal = a[column];
+        const bVal = b[column];
 
         if (aVal < bVal) return sort.direction === 'asc' ? -1 : 1;
         if (aVal > bVal) return sort.direction === 'asc' ? 1 : -1;

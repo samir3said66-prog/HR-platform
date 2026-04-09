@@ -14,7 +14,11 @@ export { InputComponent } from './input/input.component';
 export { ConnectionStatusComponent } from './connection-status/connection-status.component';
 
 // Select Component
-export { SelectComponent, type SelectOption, type SelectOptionGroup } from './select/select.component';
+export {
+  SelectComponent,
+  type SelectOption,
+  type SelectOptionGroup,
+} from './select/select.component';
 
 // Checkbox Component
 export { CheckboxComponent } from './checkbox/checkbox.component';
@@ -41,19 +45,37 @@ export { TabsComponent, TabPanelDirective, type Tab } from './tabs/tabs.componen
 export { AccordionComponent, type AccordionItem } from './accordion/accordion.component';
 
 // Data Table Component
-export { DataTableComponent, type ColumnDefinition, type SortState } from './data-table/data-table.component';
+export {
+  DataTableComponent,
+  type ColumnDefinition,
+  type SortState,
+} from './data-table/data-table.component';
 
 // Filter Panel Component
-export { FilterPanelComponent, type FilterCriteria, type FilterPreset } from './filter-panel/filter-panel.component';
+export {
+  FilterPanelComponent,
+  type FilterCriteria,
+  type FilterPreset,
+} from './filter-panel/filter-panel.component';
 
 // Search Input Component
 export { SearchInputComponent, type SearchResult } from './search-input/search-input.component';
 
 // Notification Center Component
-export { NotificationCenterComponent, type Notification, type NotificationPreferences } from './notification-center/notification-center.component';
+export {
+  NotificationCenterComponent,
+  type Notification,
+  type NotificationPreferences,
+} from './notification-center/notification-center.component';
 
 // Icon Component
 export { IconComponent } from './icon/icon.component';
 
 // Chart Component
 export { ChartComponent, type ChartType, type ChartConfig } from './chart/chart.component';
+
+// KPI Card Component
+export { KPICardComponent, type KPIData } from './kpi-card/kpi-card.component';
+
+// Breadcrumb Component
+export { BreadcrumbComponent, type BreadcrumbItem } from './breadcrumb/breadcrumb.component';

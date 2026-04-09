@@ -6,34 +6,36 @@ import * as PerformanceActions from './performance.actions';
 
 /**
  * PerformanceEffects handles side effects for performance metric operations.
- * 
+ *
  * Effects implemented:
  * - loadPerformanceMetrics$: Loads performance metrics from API with retry logic
  * - updatePerformanceMetric$: Updates a single performance metric
  * - addPerformanceMetric$: Adds a new performance metric
  * - deletePerformanceMetric$: Deletes a performance metric
- * 
+ *
  * Error Handling Strategy:
  * - Implements retry logic with exponential backoff
  * - Catches errors and dispatches failure actions
  * - Logs errors for debugging and monitoring
- * 
+ *
  * Requirements: 12.5, 12.6
  */
 @Injectable()
 export class PerformanceEffects {
+  constructor(private actions$: Actions) {}
+
   /**
    * Effect: Load Performance Metrics
-   * 
+   *
    * Triggers when loadPerformanceMetrics action is dispatched.
    * Fetches performance metrics from API with retry logic.
-   * 
+   *
    * Success: Dispatches loadPerformanceMetricsSuccess with metrics data
    * Failure: Dispatches loadPerformanceMetricsFailure with error message
-   * 
+   *
    * Retry Strategy: 3 attempts with exponential backoff
    */
-  loadPerformanceMetrics$ = createEffect(() =>
+  readonly loadPerformanceMetrics$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PerformanceActions.loadPerformanceMetrics),
       switchMap(() =>
@@ -67,16 +69,16 @@ export class PerformanceEffects {
 
   /**
    * Effect: Update Performance Metric
-   * 
+   *
    * Triggers when updatePerformanceMetric action is dispatched.
    * Sends updated metric data to API.
-   * 
+   *
    * Success: Dispatches loadPerformanceMetrics to refresh the list
    * Failure: Dispatches loadPerformanceMetricsFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  updatePerformanceMetric$ = createEffect(() =>
+  readonly updatePerformanceMetric$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PerformanceActions.updatePerformanceMetric),
       switchMap(({ metric }) =>
@@ -111,16 +113,16 @@ export class PerformanceEffects {
 
   /**
    * Effect: Add Performance Metric
-   * 
+   *
    * Triggers when addPerformanceMetric action is dispatched.
    * Sends new metric data to API.
-   * 
+   *
    * Success: Dispatches loadPerformanceMetrics to refresh the list
    * Failure: Dispatches loadPerformanceMetricsFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  addPerformanceMetric$ = createEffect(() =>
+  readonly addPerformanceMetric$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PerformanceActions.addPerformanceMetric),
       switchMap(({ metric }) =>
@@ -155,16 +157,16 @@ export class PerformanceEffects {
 
   /**
    * Effect: Delete Performance Metric
-   * 
+   *
    * Triggers when deletePerformanceMetric action is dispatched.
    * Sends delete request to API.
-   * 
+   *
    * Success: Dispatches loadPerformanceMetrics to refresh the list
    * Failure: Dispatches loadPerformanceMetricsFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  deletePerformanceMetric$ = createEffect(() =>
+  readonly deletePerformanceMetric$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PerformanceActions.deletePerformanceMetric),
       switchMap(({ id }) =>
@@ -196,6 +198,4 @@ export class PerformanceEffects {
       ),
     ),
   );
-
-  constructor(private actions$: Actions) {}
 }

@@ -5,10 +5,10 @@ type BadgeVariant = 'success' | 'warning' | 'error' | 'info';
 
 /**
  * Badge Component
- * 
+ *
  * A reusable badge component for status indicators.
  * Supports multiple variants for different statuses.
- * 
+ *
  * Requirements: 2.2, 8.2
  */
 @Component({

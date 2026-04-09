@@ -4,11 +4,11 @@ type Language = 'en' | 'ar';
 
 /**
  * Internationalization Service
- * 
+ *
  * Manages language switching between English and Arabic.
  * Persists language preference to local storage.
  * Handles RTL layout switching for Arabic.
- * 
+ *
  * Requirements: 9.1, 9.2, 9.3, 9.4
  */
 @Injectable({

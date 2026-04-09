@@ -1,11 +1,4 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  signal,
-  OnInit,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -45,7 +38,12 @@ import { CommonModule } from '@angular/common';
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              ></path>
             </svg>
             <span class="font-medium text-slate-900 dark:text-white">
               {{ item.title }}
@@ -141,7 +139,7 @@ export class AccordionComponent implements OnInit {
         event.preventDefault();
         if (index < this.items.length - 1) {
           const nextButton = document.querySelector(
-            `button[aria-controls="accordion-panel-${index + 1}"]`
+            `button[aria-controls="accordion-panel-${index + 1}"]`,
           ) as HTMLButtonElement;
           nextButton?.focus();
         }
@@ -151,7 +149,7 @@ export class AccordionComponent implements OnInit {
         event.preventDefault();
         if (index > 0) {
           const prevButton = document.querySelector(
-            `button[aria-controls="accordion-panel-${index - 1}"]`
+            `button[aria-controls="accordion-panel-${index - 1}"]`,
           ) as HTMLButtonElement;
           prevButton?.focus();
         }
@@ -160,7 +158,7 @@ export class AccordionComponent implements OnInit {
       case 'Home':
         event.preventDefault();
         const firstButton = document.querySelector(
-          'button[aria-controls="accordion-panel-0"]'
+          'button[aria-controls="accordion-panel-0"]',
         ) as HTMLButtonElement;
         firstButton?.focus();
         break;
@@ -168,7 +166,7 @@ export class AccordionComponent implements OnInit {
       case 'End':
         event.preventDefault();
         const lastButton = document.querySelector(
-          `button[aria-controls="accordion-panel-${this.items.length - 1}"]`
+          `button[aria-controls="accordion-panel-${this.items.length - 1}"]`,
         ) as HTMLButtonElement;
         lastButton?.focus();
         break;

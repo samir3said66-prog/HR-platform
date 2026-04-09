@@ -65,9 +65,7 @@ import { BadgeComponent } from '../../components/badge/badge.component';
         <app-card>
           <div class="space-y-4">
             <div class="flex items-center justify-between">
-              <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
-                Rating Breakdown
-              </h2>
+              <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Rating Breakdown</h2>
               <app-badge variant="info">Pie Chart</app-badge>
             </div>
             <app-chart
@@ -128,9 +126,7 @@ import { BadgeComponent } from '../../components/badge/badge.component';
 
         <app-card>
           <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-              High Performers
-            </p>
+            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">High Performers</p>
             <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">
               {{ highPerformersCount() }}
             </p>
@@ -142,9 +138,7 @@ import { BadgeComponent } from '../../components/badge/badge.component';
 
         <app-card>
           <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-              Needs Improvement
-            </p>
+            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Needs Improvement</p>
             <p class="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">
               {{ needsImprovementCount() }}
             </p>
@@ -255,14 +249,7 @@ export class PerformanceComponent implements OnInit {
     type: 'bar',
     title: 'Average Performance Score by Department',
     data: {
-      categories: [
-        'Engineering',
-        'Sales',
-        'Marketing',
-        'HR',
-        'Finance',
-        'Operations',
-      ],
+      categories: ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations'],
       values: [82, 75, 78, 80, 79, 76],
     },
     height: '400px',

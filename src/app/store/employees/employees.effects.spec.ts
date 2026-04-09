@@ -1,62 +1,55 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of } from 'rxjs';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { Subject, firstValueFrom } from 'rxjs';
 import { EmployeeEffects } from './employees.effects';
 import * as EmployeeActions from './employees.actions';
 import { Employee } from './employees.state';
-
-type DoneFn = () => void;
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 /**
  * Test Suite: Employee Effects
- * 
+ *
  * Tests for employee-related side effects including:
  * - Loading employees with retry logic
  * - Adding new employees
  * - Updating existing employees
  * - Deleting employees
  * - Error handling and retry logic
- * 
+ *
  * Requirements: 12.5, 12.6
  */
 describe('EmployeeEffects', () => {
   let employeeEffects: EmployeeEffects;
-  let actions$: Observable<any>;
+  let actions$: Subject<any>;
 
   beforeEach(() => {
+    actions$ = new Subject();
     TestBed.configureTestingModule({
-      providers: [
-        EmployeeEffects,
-        provideMockActions(() => actions$),
-      ],
+      providers: [EmployeeEffects, provideMockActions(() => actions$)],
     });
-    employeeEffects = TestBed.inject(EmployeeEffects) as EmployeeEffects;
+    // Inject after TestBed is configured so actions$ is available
+    employeeEffects = TestBed.inject(EmployeeEffects);
   });
 
   describe('loadEmployees$', () => {
-    it('should return loadEmployeesSuccess action on success', (done: DoneFn) => {
-      actions$ = of(EmployeeActions.loadEmployees());
-      const effect$ = (employeeEffects as any).loadEmployees$ as Observable<any>;
-      effect$.subscribe((result: any) => {
-        expect(result.type).toBe(EmployeeActions.loadEmployeesSuccess.type);
-        done();
-      });
+    it('should return loadEmployeesSuccess action on success', async () => {
+      const resultPromise = firstValueFrom(employeeEffects.loadEmployees$);
+      actions$.next(EmployeeActions.loadEmployees());
+      const result = await resultPromise;
+      expect(result.type).toBe(EmployeeActions.loadEmployeesSuccess.type);
     });
 
-    it('should handle loadEmployees action and dispatch success', (done: DoneFn) => {
-      actions$ = of(EmployeeActions.loadEmployees());
-      const effect$ = (employeeEffects as any).loadEmployees$ as Observable<any>;
-      effect$.subscribe((result: any) => {
-        expect(result).toBeDefined();
-        expect(result.type).toBeDefined();
-        done();
-      });
+    it('should handle loadEmployees action and dispatch success', async () => {
+      const resultPromise = firstValueFrom(employeeEffects.loadEmployees$);
+      actions$.next(EmployeeActions.loadEmployees());
+      const result = await resultPromise;
+      expect(result).toBeDefined();
+      expect(result.type).toBeDefined();
     });
   });
 
   describe('addEmployee$', () => {
-    it('should handle addEmployee action', (done: DoneFn) => {
+    it('should handle addEmployee action', async () => {
       const mockEmployee: Employee = {
         id: '1',
         name: 'John Doe',
@@ -68,15 +61,13 @@ describe('EmployeeEffects', () => {
         hireDate: '2020-01-15',
       };
 
-      actions$ = of(EmployeeActions.addEmployee({ employee: mockEmployee }));
-      const effect$ = (employeeEffects as any).addEmployee$ as Observable<any>;
-      effect$.subscribe((result: any) => {
-        expect(result.type).toBe(EmployeeActions.loadEmployees.type);
-        done();
-      });
+      const resultPromise = firstValueFrom(employeeEffects.addEmployee$);
+      actions$.next(EmployeeActions.addEmployee({ employee: mockEmployee }));
+      const result = await resultPromise;
+      expect(result.type).toBe(EmployeeActions.loadEmployees.type);
     });
 
-    it('should dispatch loadEmployees after adding employee', (done: DoneFn) => {
+    it('should dispatch loadEmployees after adding employee', async () => {
       const mockEmployee: Employee = {
         id: '2',
         name: 'Jane Smith',
@@ -88,17 +79,15 @@ describe('EmployeeEffects', () => {
         hireDate: '2021-06-01',
       };
 
-      actions$ = of(EmployeeActions.addEmployee({ employee: mockEmployee }));
-      const effect$ = (employeeEffects as any).addEmployee$ as Observable<any>;
-      effect$.subscribe((result: any) => {
-        expect(result.type).toBe(EmployeeActions.loadEmployees.type);
-        done();
-      });
+      const resultPromise = firstValueFrom(employeeEffects.addEmployee$);
+      actions$.next(EmployeeActions.addEmployee({ employee: mockEmployee }));
+      const result = await resultPromise;
+      expect(result.type).toBe(EmployeeActions.loadEmployees.type);
     });
   });
 
   describe('updateEmployee$', () => {
-    it('should handle updateEmployee action', (done: DoneFn) => {
+    it('should handle updateEmployee action', async () => {
       const mockEmployee: Employee = {
         id: '1',
         name: 'John Doe Updated',
@@ -110,15 +99,13 @@ describe('EmployeeEffects', () => {
         hireDate: '2020-01-15',
       };
 
-      actions$ = of(EmployeeActions.updateEmployee({ employee: mockEmployee }));
-      const effect$ = (employeeEffects as any).updateEmployee$ as Observable<any>;
-      effect$.subscribe((result: any) => {
-        expect(result.type).toBe(EmployeeActions.loadEmployees.type);
-        done();
-      });
+      const resultPromise = firstValueFrom(employeeEffects.updateEmployee$);
+      actions$.next(EmployeeActions.updateEmployee({ employee: mockEmployee }));
+      const result = await resultPromise;
+      expect(result.type).toBe(EmployeeActions.loadEmployees.type);
     });
 
-    it('should dispatch loadEmployees after updating employee', (done: DoneFn) => {
+    it('should dispatch loadEmployees after updating employee', async () => {
       const mockEmployee: Employee = {
         id: '1',
         name: 'John Doe',
@@ -130,44 +117,36 @@ describe('EmployeeEffects', () => {
         hireDate: '2020-01-15',
       };
 
-      actions$ = of(EmployeeActions.updateEmployee({ employee: mockEmployee }));
-      const effect$ = (employeeEffects as any).updateEmployee$ as Observable<any>;
-      effect$.subscribe((result: any) => {
-        expect(result.type).toBe(EmployeeActions.loadEmployees.type);
-        done();
-      });
+      const resultPromise = firstValueFrom(employeeEffects.updateEmployee$);
+      actions$.next(EmployeeActions.updateEmployee({ employee: mockEmployee }));
+      const result = await resultPromise;
+      expect(result.type).toBe(EmployeeActions.loadEmployees.type);
     });
   });
 
   describe('deleteEmployee$', () => {
-    it('should handle deleteEmployee action', (done: DoneFn) => {
-      actions$ = of(EmployeeActions.deleteEmployee({ id: '1' }));
-      const effect$ = (employeeEffects as any).deleteEmployee$ as Observable<any>;
-      effect$.subscribe((result: any) => {
-        expect(result.type).toBe(EmployeeActions.loadEmployees.type);
-        done();
-      });
+    it('should handle deleteEmployee action', async () => {
+      const resultPromise = firstValueFrom(employeeEffects.deleteEmployee$);
+      actions$.next(EmployeeActions.deleteEmployee({ id: '1' }));
+      const result = await resultPromise;
+      expect(result.type).toBe(EmployeeActions.loadEmployees.type);
     });
 
-    it('should dispatch loadEmployees after deleting employee', (done: DoneFn) => {
-      actions$ = of(EmployeeActions.deleteEmployee({ id: '2' }));
-      const effect$ = (employeeEffects as any).deleteEmployee$ as Observable<any>;
-      effect$.subscribe((result: any) => {
-        expect(result.type).toBe(EmployeeActions.loadEmployees.type);
-        done();
-      });
+    it('should dispatch loadEmployees after deleting employee', async () => {
+      const resultPromise = firstValueFrom(employeeEffects.deleteEmployee$);
+      actions$.next(EmployeeActions.deleteEmployee({ id: '2' }));
+      const result = await resultPromise;
+      expect(result.type).toBe(EmployeeActions.loadEmployees.type);
     });
   });
 
   describe('Error Handling', () => {
-    it('should implement retry logic with exponential backoff', (done: DoneFn) => {
-      actions$ = of(EmployeeActions.loadEmployees());
-      const effect$ = (employeeEffects as any).loadEmployees$ as Observable<any>;
-      effect$.subscribe((result: any) => {
-        expect(result).toBeDefined();
-        expect(result.type).toBeDefined();
-        done();
-      });
+    it('should implement retry logic with exponential backoff', async () => {
+      const resultPromise = firstValueFrom(employeeEffects.loadEmployees$);
+      actions$.next(EmployeeActions.loadEmployees());
+      const result = await resultPromise;
+      expect(result).toBeDefined();
+      expect(result.type).toBeDefined();
     });
   });
 });

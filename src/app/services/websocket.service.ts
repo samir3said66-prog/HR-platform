@@ -4,11 +4,11 @@ import { filter, map, retryWhen, delay, take } from 'rxjs/operators';
 
 /**
  * WebSocket Service
- * 
+ *
  * Manages WebSocket connections for real-time data updates.
  * Implements automatic reconnection with exponential backoff.
  * Handles connection state management and data streaming.
- * 
+ *
  * Requirements: 5.1, 5.2, 13.1, 13.2
  */
 @Injectable({
@@ -17,13 +17,16 @@ import { filter, map, retryWhen, delay, take } from 'rxjs/operators';
 export class WebSocketService {
   private ws: WebSocket | null = null;
   private messageSubject = new Subject<any>();
-  private connectionStatus = new BehaviorSubject<'connected' | 'disconnected' | 'reconnecting'>('disconnected');
+  private connectionStatus = new BehaviorSubject<'connected' | 'disconnected' | 'reconnecting'>(
+    'disconnected',
+  );
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000; // Start with 1 second
 
   messages$: Observable<any> = this.messageSubject.asObservable();
-  connectionStatus$: Observable<'connected' | 'disconnected' | 'reconnecting'> = this.connectionStatus.asObservable();
+  connectionStatus$: Observable<'connected' | 'disconnected' | 'reconnecting'> =
+    this.connectionStatus.asObservable();
 
   constructor() {
     // Auto-connect on service initialization
@@ -81,7 +84,9 @@ export class WebSocketService {
     this.connectionStatus.next('reconnecting');
 
     const delay = Math.pow(2, this.reconnectAttempts - 1) * this.reconnectDelay;
-    console.log(`[WebSocketService] Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+    console.log(
+      `[WebSocketService] Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`,
+    );
 
     setTimeout(() => {
       this.connect(url);

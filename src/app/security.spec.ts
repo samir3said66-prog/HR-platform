@@ -2,10 +2,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 /**
  * Test Suite: Security & Compliance Tests
- * 
+ *
  * Tests for authentication, authorization, CSRF protection, XSS prevention,
  * and input validation.
- * 
+ *
  * **Validates: Requirements 30.1, 30.2, 30.3, 30.4, 31.1, 31.2**
  */
 
@@ -13,7 +13,7 @@ describe('Security & Compliance', () => {
   describe('Authentication', () => {
     /**
      * Test: User authentication with valid credentials
-     * 
+     *
      * Validates that users can log in with correct credentials
      * and receive JWT tokens.
      */
@@ -91,7 +91,7 @@ describe('Security & Compliance', () => {
   describe('Authorization & RBAC', () => {
     /**
      * Test: Role-based access control
-     * 
+     *
      * Validates that users can only access resources
      * appropriate for their role.
      */
@@ -177,7 +177,7 @@ describe('Security & Compliance', () => {
   describe('CSRF Protection', () => {
     /**
      * Test: Cross-Site Request Forgery protection
-     * 
+     *
      * Validates that CSRF tokens are used for state-changing operations.
      */
 
@@ -242,7 +242,7 @@ describe('Security & Compliance', () => {
   describe('XSS Prevention', () => {
     /**
      * Test: Cross-Site Scripting prevention
-     * 
+     *
      * Validates that user input is properly sanitized
      * and HTML is escaped.
      */
@@ -280,7 +280,11 @@ describe('Security & Compliance', () => {
 
       const escaped = htmlEscaper.escape(userContent);
 
-      expect(escaped).not.toContain('onerror');
+      // Check that HTML tags are escaped
+      expect(escaped).toContain('&lt;');
+      expect(escaped).toContain('&gt;');
+      // Check that the escaped string doesn't contain executable HTML
+      expect(escaped).not.toContain('<img');
     });
 
     it('should prevent script injection in form inputs', () => {
@@ -292,7 +296,8 @@ describe('Security & Compliance', () => {
       const validator = {
         validateForm: vi.fn((data: any) => {
           const sanitized = Object.keys(data).reduce((acc, key) => {
-            acc[key] = typeof data[key] === 'string' ? data[key].replace(/<[^>]*>/g, '') : data[key];
+            acc[key] =
+              typeof data[key] === 'string' ? data[key].replace(/<[^>]*>/g, '') : data[key];
             return acc;
           }, {} as any);
           return sanitized;
@@ -317,7 +322,7 @@ describe('Security & Compliance', () => {
   describe('Input Validation', () => {
     /**
      * Test: Input validation and sanitization
-     * 
+     *
      * Validates that all user inputs are validated
      * before processing.
      */
@@ -339,7 +344,8 @@ describe('Security & Compliance', () => {
       const validator = {
         isStrongPassword: vi.fn((password: string) => {
           // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special char
-          const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+          const strongRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
           return strongRegex.test(password);
         }),
       };
@@ -395,7 +401,7 @@ describe('Security & Compliance', () => {
   describe('Data Encryption', () => {
     /**
      * Test: Data encryption for sensitive information
-     * 
+     *
      * Validates that sensitive data is encrypted at rest
      * and in transit.
      */
@@ -438,7 +444,7 @@ describe('Security & Compliance', () => {
   describe('Audit Logging', () => {
     /**
      * Test: Audit logging for compliance
-     * 
+     *
      * Validates that all user actions are logged
      * for compliance and security purposes.
      */
@@ -515,7 +521,7 @@ describe('Security & Compliance', () => {
   describe('Security Headers', () => {
     /**
      * Test: Security headers configuration
-     * 
+     *
      * Validates that proper security headers are set.
      */
 

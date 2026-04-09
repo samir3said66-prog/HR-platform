@@ -6,7 +6,7 @@ import * as PreferencesActions from './preferences.actions';
 
 /**
  * PreferencesEffects handles side effects for user preference operations.
- * 
+ *
  * Effects implemented:
  * - loadPreferences$: Loads user preferences from local storage and API
  * - updatePreferences$: Updates user preferences
@@ -14,29 +14,31 @@ import * as PreferencesActions from './preferences.actions';
  * - addSavedFilter$: Adds a saved filter
  * - removeSavedFilter$: Removes a saved filter
  * - updateSavedFilter$: Updates a saved filter
- * 
+ *
  * Error Handling Strategy:
  * - Implements retry logic with exponential backoff for API calls
  * - Falls back to local storage on API failure
  * - Catches errors and dispatches failure actions
  * - Logs errors for debugging and monitoring
- * 
+ *
  * Requirements: 12.5, 12.6
  */
 @Injectable()
 export class PreferencesEffects {
+  constructor(private actions$: Actions) {}
+
   /**
    * Effect: Load Preferences
-   * 
+   *
    * Triggers when loadPreferences action is dispatched.
    * Attempts to load preferences from API, falls back to local storage.
-   * 
+   *
    * Success: Dispatches loadPreferencesSuccess with preferences data
    * Failure: Dispatches loadPreferencesFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  loadPreferences$ = createEffect(() =>
+  readonly loadPreferences$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PreferencesActions.loadPreferences),
       switchMap(() => {
@@ -100,16 +102,16 @@ export class PreferencesEffects {
 
   /**
    * Effect: Update Preferences
-   * 
+   *
    * Triggers when updatePreferences action is dispatched.
    * Sends updated preferences to API.
-   * 
+   *
    * Success: Dispatches updatePreferencesSuccess with updated preferences
    * Failure: Dispatches updatePreferencesFailure with error message
-   * 
+   *
    * Retry Strategy: 2 attempts with exponential backoff
    */
-  updatePreferences$ = createEffect(() =>
+  readonly updatePreferences$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PreferencesActions.updatePreferences),
       switchMap(({ preferences }) => {
@@ -158,14 +160,14 @@ export class PreferencesEffects {
 
   /**
    * Effect: Persist Preferences to Local Storage
-   * 
+   *
    * Triggers when preferences are successfully loaded or updated.
    * Persists preferences to local storage for offline access.
-   * 
+   *
    * This is a side-effect only effect (dispatch: false).
    * No action is dispatched after completion.
    */
-  persistPreferences$ = createEffect(
+  readonly persistPreferences$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(
@@ -177,7 +179,10 @@ export class PreferencesEffects {
             localStorage.setItem('userPreferences', JSON.stringify(preferences));
             console.log('[PreferencesEffects] Preferences persisted to local storage');
           } catch (error) {
-            console.error('[PreferencesEffects] Failed to persist preferences to local storage:', error);
+            console.error(
+              '[PreferencesEffects] Failed to persist preferences to local storage:',
+              error,
+            );
           }
         }),
       ),
@@ -186,14 +191,14 @@ export class PreferencesEffects {
 
   /**
    * Effect: Add Saved Filter
-   * 
+   *
    * Triggers when addSavedFilter action is dispatched.
    * Adds a new saved filter to preferences.
-   * 
+   *
    * Success: Dispatches updatePreferences to save the updated list
    * Failure: Dispatches updatePreferencesFailure with error message
    */
-  addSavedFilter$ = createEffect(() =>
+  readonly addSavedFilter$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PreferencesActions.addSavedFilter),
       switchMap(({ filter }) => {
@@ -218,14 +223,14 @@ export class PreferencesEffects {
 
   /**
    * Effect: Remove Saved Filter
-   * 
+   *
    * Triggers when removeSavedFilter action is dispatched.
    * Removes a saved filter from preferences.
-   * 
+   *
    * Success: Dispatches updatePreferences to save the updated list
    * Failure: Dispatches updatePreferencesFailure with error message
    */
-  removeSavedFilter$ = createEffect(() =>
+  readonly removeSavedFilter$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PreferencesActions.removeSavedFilter),
       switchMap(({ filterId }) => {
@@ -250,14 +255,14 @@ export class PreferencesEffects {
 
   /**
    * Effect: Update Saved Filter
-   * 
+   *
    * Triggers when updateSavedFilter action is dispatched.
    * Updates an existing saved filter in preferences.
-   * 
+   *
    * Success: Dispatches updatePreferences to save the updated filter
    * Failure: Dispatches updatePreferencesFailure with error message
    */
-  updateSavedFilter$ = createEffect(() =>
+  readonly updateSavedFilter$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PreferencesActions.updateSavedFilter),
       switchMap(({ filter }) => {
@@ -279,6 +284,4 @@ export class PreferencesEffects {
       }),
     ),
   );
-
-  constructor(private actions$: Actions) {}
 }

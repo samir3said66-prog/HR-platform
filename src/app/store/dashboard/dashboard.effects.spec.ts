@@ -1,15 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
 import { DashboardEffects } from './dashboard.effects';
 import * as DashboardActions from './dashboard.actions';
-import { DashboardConfig, DashboardMetrics } from './dashboard.state';
-
-type DoneFn = () => void;
+import { DashboardConfig } from './dashboard.state';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 /**
  * Test Suite: Dashboard Effects
- * 
+ *
  * Tests for dashboard-related side effects including:
  * - Loading dashboard configurations with retry logic
  * - Loading dashboard metrics
@@ -17,14 +16,15 @@ type DoneFn = () => void;
  * - Updating existing dashboard configurations
  * - Deleting dashboard configurations
  * - Error handling and retry logic
- * 
+ *
  * Requirements: 12.5, 12.6
  */
 describe('DashboardEffects', () => {
   let effects: DashboardEffects;
-  let actions$: Observable<any>;
+  let actions$: Subject<any>;
 
   beforeEach(() => {
+    actions$ = new Subject();
     TestBed.configureTestingModule({
       providers: [DashboardEffects, provideMockActions(() => actions$)],
     });
@@ -32,45 +32,41 @@ describe('DashboardEffects', () => {
   });
 
   describe('loadDashboardConfigs$', () => {
-    it('should return loadDashboardConfigsSuccess action on success', (done: DoneFn) => {
-      actions$ = of(DashboardActions.loadDashboardConfigs());
-      effects.loadDashboardConfigs$.subscribe((result: any) => {
-        expect(result.type).toBe(DashboardActions.loadDashboardConfigsSuccess.type);
-        done();
-      });
+    it('should return loadDashboardConfigsSuccess action on success', async () => {
+      const resultPromise = firstValueFrom(effects.loadDashboardConfigs$);
+      actions$.next(DashboardActions.loadDashboardConfigs());
+      const result = await resultPromise;
+      expect(result.type).toBe(DashboardActions.loadDashboardConfigsSuccess.type);
     });
 
-    it('should handle loadDashboardConfigs action and dispatch success', (done: DoneFn) => {
-      actions$ = of(DashboardActions.loadDashboardConfigs());
-      effects.loadDashboardConfigs$.subscribe((result: any) => {
-        expect(result).toBeDefined();
-        expect(result.type).toBeDefined();
-        done();
-      });
+    it('should handle loadDashboardConfigs action and dispatch success', async () => {
+      const resultPromise = firstValueFrom(effects.loadDashboardConfigs$);
+      actions$.next(DashboardActions.loadDashboardConfigs());
+      const result = await resultPromise;
+      expect(result).toBeDefined();
+      expect(result.type).toBeDefined();
     });
   });
 
   describe('loadDashboardMetrics$', () => {
-    it('should return loadDashboardMetricsSuccess action on success', (done: DoneFn) => {
-      actions$ = of(DashboardActions.loadDashboardMetrics());
-      effects.loadDashboardMetrics$.subscribe((result: any) => {
-        expect(result.type).toBe(DashboardActions.loadDashboardMetricsSuccess.type);
-        done();
-      });
+    it('should return loadDashboardMetricsSuccess action on success', async () => {
+      const resultPromise = firstValueFrom(effects.loadDashboardMetrics$);
+      actions$.next(DashboardActions.loadDashboardMetrics());
+      const result = await resultPromise;
+      expect(result.type).toBe(DashboardActions.loadDashboardMetricsSuccess.type);
     });
 
-    it('should handle loadDashboardMetrics action and dispatch success', (done: DoneFn) => {
-      actions$ = of(DashboardActions.loadDashboardMetrics());
-      effects.loadDashboardMetrics$.subscribe((result: any) => {
-        expect(result).toBeDefined();
-        expect(result.type).toBeDefined();
-        done();
-      });
+    it('should handle loadDashboardMetrics action and dispatch success', async () => {
+      const resultPromise = firstValueFrom(effects.loadDashboardMetrics$);
+      actions$.next(DashboardActions.loadDashboardMetrics());
+      const result = await resultPromise;
+      expect(result).toBeDefined();
+      expect(result.type).toBeDefined();
     });
   });
 
   describe('createDashboardConfig$', () => {
-    it('should handle createDashboardConfig action', (done: DoneFn) => {
+    it('should handle createDashboardConfig action', async () => {
       const mockConfig: DashboardConfig = {
         id: 'config-1',
         name: 'Main Dashboard',
@@ -81,14 +77,13 @@ describe('DashboardEffects', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      actions$ = of(DashboardActions.createDashboardConfig({ config: mockConfig }));
-      effects.createDashboardConfig$.subscribe((result: any) => {
-        expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
-        done();
-      });
+      const resultPromise = firstValueFrom(effects.createDashboardConfig$);
+      actions$.next(DashboardActions.createDashboardConfig({ config: mockConfig }));
+      const result = await resultPromise;
+      expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
     });
 
-    it('should dispatch loadDashboardConfigs after creating config', (done: DoneFn) => {
+    it('should dispatch loadDashboardConfigs after creating config', async () => {
       const mockConfig: DashboardConfig = {
         id: 'config-2',
         name: 'Performance Dashboard',
@@ -99,16 +94,15 @@ describe('DashboardEffects', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      actions$ = of(DashboardActions.createDashboardConfig({ config: mockConfig }));
-      effects.createDashboardConfig$.subscribe((result: any) => {
-        expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
-        done();
-      });
+      const resultPromise = firstValueFrom(effects.createDashboardConfig$);
+      actions$.next(DashboardActions.createDashboardConfig({ config: mockConfig }));
+      const result = await resultPromise;
+      expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
     });
   });
 
   describe('updateDashboardConfig$', () => {
-    it('should handle updateDashboardConfig action', (done: DoneFn) => {
+    it('should handle updateDashboardConfig action', async () => {
       const mockConfig: DashboardConfig = {
         id: 'config-1',
         name: 'Updated Dashboard',
@@ -119,14 +113,13 @@ describe('DashboardEffects', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      actions$ = of(DashboardActions.updateDashboardConfig({ config: mockConfig }));
-      effects.updateDashboardConfig$.subscribe((result: any) => {
-        expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
-        done();
-      });
+      const resultPromise = firstValueFrom(effects.updateDashboardConfig$);
+      actions$.next(DashboardActions.updateDashboardConfig({ config: mockConfig }));
+      const result = await resultPromise;
+      expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
     });
 
-    it('should dispatch loadDashboardConfigs after updating config', (done: DoneFn) => {
+    it('should dispatch loadDashboardConfigs after updating config', async () => {
       const mockConfig: DashboardConfig = {
         id: 'config-1',
         name: 'Main Dashboard Updated',
@@ -137,40 +130,36 @@ describe('DashboardEffects', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      actions$ = of(DashboardActions.updateDashboardConfig({ config: mockConfig }));
-      effects.updateDashboardConfig$.subscribe((result: any) => {
-        expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
-        done();
-      });
+      const resultPromise = firstValueFrom(effects.updateDashboardConfig$);
+      actions$.next(DashboardActions.updateDashboardConfig({ config: mockConfig }));
+      const result = await resultPromise;
+      expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
     });
   });
 
   describe('deleteDashboardConfig$', () => {
-    it('should handle deleteDashboardConfig action', (done: DoneFn) => {
-      actions$ = of(DashboardActions.deleteDashboardConfig({ configId: 'config-1' }));
-      effects.deleteDashboardConfig$.subscribe((result: any) => {
-        expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
-        done();
-      });
+    it('should handle deleteDashboardConfig action', async () => {
+      const resultPromise = firstValueFrom(effects.deleteDashboardConfig$);
+      actions$.next(DashboardActions.deleteDashboardConfig({ configId: 'config-1' }));
+      const result = await resultPromise;
+      expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
     });
 
-    it('should dispatch loadDashboardConfigs after deleting config', (done: DoneFn) => {
-      actions$ = of(DashboardActions.deleteDashboardConfig({ configId: 'config-2' }));
-      effects.deleteDashboardConfig$.subscribe((result: any) => {
-        expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
-        done();
-      });
+    it('should dispatch loadDashboardConfigs after deleting config', async () => {
+      const resultPromise = firstValueFrom(effects.deleteDashboardConfig$);
+      actions$.next(DashboardActions.deleteDashboardConfig({ configId: 'config-2' }));
+      const result = await resultPromise;
+      expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
     });
   });
 
   describe('Error Handling', () => {
-    it('should implement retry logic with exponential backoff', (done: DoneFn) => {
-      actions$ = of(DashboardActions.loadDashboardConfigs());
-      effects.loadDashboardConfigs$.subscribe((result: any) => {
-        expect(result).toBeDefined();
-        expect(result.type).toBeDefined();
-        done();
-      });
+    it('should implement retry logic with exponential backoff', async () => {
+      const resultPromise = firstValueFrom(effects.loadDashboardConfigs$);
+      actions$.next(DashboardActions.loadDashboardConfigs());
+      const result = await resultPromise;
+      expect(result).toBeDefined();
+      expect(result.type).toBeDefined();
     });
   });
 });

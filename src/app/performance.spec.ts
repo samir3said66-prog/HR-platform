@@ -2,10 +2,10 @@ import { describe, it, expect, beforeEach } from 'vitest';
 
 /**
  * Test Suite: Performance Tests
- * 
+ *
  * Tests for bundle size optimization, initial load time, and Lighthouse metrics.
  * Validates that performance targets are met.
- * 
+ *
  * **Validates: Requirements 18.1, 18.2, 18.3, 18.4, 18.5, 19.1, 19.2, 19.3, 19.4, 17.1, 20.1**
  */
 
@@ -13,7 +13,7 @@ describe('Performance Tests', () => {
   describe('Bundle Size Optimization', () => {
     /**
      * Test: Bundle size should be less than 2.5MB (45% reduction from baseline)
-     * 
+     *
      * This test validates that the application bundle is optimized through:
      * - Tree-shaking unused code
      * - Code splitting for lazy-loaded routes
@@ -34,13 +34,7 @@ describe('Performance Tests', () => {
 
     it('should implement code splitting for lazy-loaded routes', () => {
       // Routes that should be lazy-loaded:
-      const lazyRoutes = [
-        'dashboard',
-        'performance',
-        'workforce',
-        'turnover',
-        'hiring-forecast',
-      ];
+      const lazyRoutes = ['dashboard', 'performance', 'workforce', 'turnover', 'hiring-forecast'];
 
       // Each route should have its own chunk
       expect(lazyRoutes.length).toBeGreaterThan(0);
@@ -77,7 +71,7 @@ describe('Performance Tests', () => {
   describe('Initial Load Time', () => {
     /**
      * Test: Initial dashboard load should complete within 2 seconds
-     * 
+     *
      * This includes:
      * - Time to first meaningful paint
      * - Time to interactive
@@ -114,7 +108,7 @@ describe('Performance Tests', () => {
   describe('Lighthouse Metrics', () => {
     /**
      * Test: Lighthouse scores should meet targets
-     * 
+     *
      * Targets:
      * - Overall: 94+
      * - Performance: 95+
@@ -162,7 +156,7 @@ describe('Performance Tests', () => {
   describe('Large Dataset Performance', () => {
     /**
      * Test: Filtering 10,000+ records should complete within 600ms
-     * 
+     *
      * This validates that the filtering system is optimized for large datasets.
      */
 
@@ -198,7 +192,7 @@ describe('Performance Tests', () => {
   describe('Real-Time Sync Performance', () => {
     /**
      * Test: Real-time updates should propagate within 500ms
-     * 
+     *
      * This validates that the WebSocket and state management
      * can handle real-time updates efficiently.
      */
@@ -228,7 +222,7 @@ describe('Performance Tests', () => {
   describe('Report Generation Performance', () => {
     /**
      * Test: Report generation should complete within 5 seconds
-     * 
+     *
      * This includes PDF generation, Excel export, and CSV export.
      */
 
@@ -257,7 +251,7 @@ describe('Performance Tests', () => {
   describe('Memory Usage', () => {
     /**
      * Test: Memory usage should be optimized
-     * 
+     *
      * This validates that the application doesn't have memory leaks
      * and manages resources efficiently.
      */
@@ -290,7 +284,7 @@ describe('Performance Tests', () => {
   describe('Network Performance', () => {
     /**
      * Test: Network requests should be optimized
-     * 
+     *
      * This includes HTTP caching, compression, and request batching.
      */
 
@@ -327,7 +321,7 @@ describe('Performance Tests', () => {
   describe('Build Performance', () => {
     /**
      * Test: Build times should be optimized
-     * 
+     *
      * Development build: < 5 seconds
      * Production build: < 30 seconds
      */

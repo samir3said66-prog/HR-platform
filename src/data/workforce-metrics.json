@@ -1,0 +1,32 @@
+{
+  "byRegion": [
+    { "region": "Middle East", "headcount": 7200, "active": 7100, "onLeave": 100 },
+    { "region": "Europe", "headcount": 4800, "active": 4750, "onLeave": 50 }
+  ],
+  "byDepartment": [
+    { "department": "Engineering", "headcount": 3500, "active": 3450, "onLeave": 50 },
+    { "department": "Sales", "headcount": 2000, "active": 1950, "onLeave": 50 },
+    { "department": "Marketing", "headcount": 1200, "active": 1180, "onLeave": 20 },
+    { "department": "HR", "headcount": 600, "active": 590, "onLeave": 10 },
+    { "department": "Finance", "headcount": 1300, "active": 1280, "onLeave": 20 },
+    { "department": "Operations", "headcount": 2400, "active": 2400, "onLeave": 0 }
+  ],
+  "byStatus": [
+    { "status": "Active", "count": 11850 },
+    { "status": "On Leave", "count": 150 }
+  ],
+  "trends": [
+    { "month": "Jan", "headcount": 11500 },
+    { "month": "Feb", "headcount": 11600 },
+    { "month": "Mar", "headcount": 11700 },
+    { "month": "Apr", "headcount": 11750 },
+    { "month": "May", "headcount": 11800 },
+    { "month": "Jun", "headcount": 11850 },
+    { "month": "Jul", "headcount": 11900 },
+    { "month": "Aug", "headcount": 11950 },
+    { "month": "Sep", "headcount": 12000 },
+    { "month": "Oct", "headcount": 12000 },
+    { "month": "Nov", "headcount": 12000 },
+    { "month": "Dec", "headcount": 12000 }
+  ]
+}

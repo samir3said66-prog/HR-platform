@@ -30,11 +30,14 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
 export interface FilterCriteria {
   department?: string[];
   region?: string[];
+  status?: string[];
   employmentStatus?: string[];
   performanceScoreMin?: number;
   performanceScoreMax?: number;
+  performanceScoreRange?: [number, number];
   hireDateStart?: string;
   hireDateEnd?: string;
+  hireDateRange?: string[];
 }
 
 export interface FilterPreset {
@@ -124,7 +127,10 @@ export interface FilterPreset {
       </div>
 
       <!-- Advanced Filters -->
-      <div *ngIf="showAdvanced()" class="space-y-4 mb-6 pb-6 border-b border-slate-200 dark:border-slate-700">
+      <div
+        *ngIf="showAdvanced()"
+        class="space-y-4 mb-6 pb-6 border-b border-slate-200 dark:border-slate-700"
+      >
         <!-- Performance Score Range -->
         <div>
           <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -203,7 +209,10 @@ export interface FilterPreset {
           </button>
         </div>
         <div class="space-y-2">
-          <div *ngFor="let preset of presets()" class="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-900 rounded-md">
+          <div
+            *ngFor="let preset of presets()"
+            class="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-900 rounded-md"
+          >
             <button
               (click)="loadPreset(preset)"
               class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-left flex-1"
@@ -219,7 +228,10 @@ export interface FilterPreset {
               ×
             </button>
           </div>
-          <div *ngIf="presets().length === 0" class="text-sm text-slate-500 dark:text-slate-400 py-2">
+          <div
+            *ngIf="presets().length === 0"
+            class="text-sm text-slate-500 dark:text-slate-400 py-2"
+          >
             No saved presets
           </div>
         </div>
@@ -231,7 +243,10 @@ export interface FilterPreset {
           Recent Filters
         </label>
         <div class="space-y-2 max-h-40 overflow-y-auto">
-          <div *ngFor="let history of filterHistory()" class="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-900 rounded-md text-sm">
+          <div
+            *ngFor="let history of filterHistory()"
+            class="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-900 rounded-md text-sm"
+          >
             <button
               (click)="loadHistory(history)"
               class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-left flex-1"
@@ -243,7 +258,10 @@ export interface FilterPreset {
               {{ history.count }} records
             </span>
           </div>
-          <div *ngIf="filterHistory().length === 0" class="text-sm text-slate-500 dark:text-slate-400 py-2">
+          <div
+            *ngIf="filterHistory().length === 0"
+            class="text-sm text-slate-500 dark:text-slate-400 py-2"
+          >
             No filter history
           </div>
         </div>
