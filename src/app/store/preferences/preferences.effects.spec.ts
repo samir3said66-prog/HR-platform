@@ -5,6 +5,8 @@ import { PreferencesEffects } from './preferences.effects';
 import * as PreferencesActions from './preferences.actions';
 import { UserPreferences, SavedFilter } from './preferences.state';
 
+type DoneFn = () => void;
+
 /**
  * Test Suite: Preferences Effects
  * 
@@ -34,7 +36,7 @@ describe('PreferencesEffects', () => {
   });
 
   describe('loadPreferences$', () => {
-    it('should return loadPreferencesSuccess action on success', (done) => {
+    it('should return loadPreferencesSuccess action on success', (done: DoneFn) => {
       actions$ = of(PreferencesActions.loadPreferences());
       effects.loadPreferences$.subscribe((result: any) => {
         expect(result.type).toBe(PreferencesActions.loadPreferencesSuccess.type);
@@ -42,7 +44,7 @@ describe('PreferencesEffects', () => {
       });
     });
 
-    it('should handle loadPreferences action and dispatch success', (done) => {
+    it('should handle loadPreferences action and dispatch success', (done: DoneFn) => {
       actions$ = of(PreferencesActions.loadPreferences());
       effects.loadPreferences$.subscribe((result: any) => {
         expect(result).toBeDefined();
@@ -53,7 +55,7 @@ describe('PreferencesEffects', () => {
   });
 
   describe('updatePreferences$', () => {
-    it('should handle updatePreferences action', (done) => {
+    it('should handle updatePreferences action', (done: DoneFn) => {
       const updates: Partial<UserPreferences> = { language: 'ar' };
       actions$ = of(PreferencesActions.updatePreferences({ preferences: updates }));
       effects.updatePreferences$.subscribe((result: any) => {
@@ -62,7 +64,7 @@ describe('PreferencesEffects', () => {
       });
     });
 
-    it('should dispatch updatePreferencesSuccess after updating', (done) => {
+    it('should dispatch updatePreferencesSuccess after updating', (done: DoneFn) => {
       const updates: Partial<UserPreferences> = { darkMode: true, theme: 'dark' };
       actions$ = of(PreferencesActions.updatePreferences({ preferences: updates }));
       effects.updatePreferences$.subscribe((result: any) => {
@@ -73,7 +75,7 @@ describe('PreferencesEffects', () => {
   });
 
   describe('persistPreferences$', () => {
-    it('should persist preferences to local storage', (done) => {
+    it('should persist preferences to local storage', (done: DoneFn) => {
       const mockPreferences: UserPreferences = {
         userId: 'user-1',
         language: 'ar',
@@ -95,7 +97,7 @@ describe('PreferencesEffects', () => {
       });
     });
 
-    it('should persist updated preferences to local storage', (done) => {
+    it('should persist updated preferences to local storage', (done: DoneFn) => {
       const mockPreferences: UserPreferences = {
         userId: 'user-1',
         language: 'en',
@@ -119,7 +121,7 @@ describe('PreferencesEffects', () => {
   });
 
   describe('addSavedFilter$', () => {
-    it('should handle addSavedFilter action', (done) => {
+    it('should handle addSavedFilter action', (done: DoneFn) => {
       const mockFilter: SavedFilter = {
         id: 'filter-1',
         name: 'Engineering Department',
@@ -134,7 +136,7 @@ describe('PreferencesEffects', () => {
       });
     });
 
-    it('should dispatch updatePreferences after adding filter', (done) => {
+    it('should dispatch updatePreferences after adding filter', (done: DoneFn) => {
       const mockFilter: SavedFilter = {
         id: 'filter-2',
         name: 'HR Department',
@@ -151,7 +153,7 @@ describe('PreferencesEffects', () => {
   });
 
   describe('removeSavedFilter$', () => {
-    it('should handle removeSavedFilter action', (done) => {
+    it('should handle removeSavedFilter action', (done: DoneFn) => {
       actions$ = of(PreferencesActions.removeSavedFilter({ filterId: 'filter-1' }));
       effects.removeSavedFilter$.subscribe((result: any) => {
         expect(result.type).toBe(PreferencesActions.updatePreferences.type);
@@ -159,7 +161,7 @@ describe('PreferencesEffects', () => {
       });
     });
 
-    it('should dispatch updatePreferences after removing filter', (done) => {
+    it('should dispatch updatePreferences after removing filter', (done: DoneFn) => {
       actions$ = of(PreferencesActions.removeSavedFilter({ filterId: 'filter-2' }));
       effects.removeSavedFilter$.subscribe((result: any) => {
         expect(result.type).toBe(PreferencesActions.updatePreferences.type);
@@ -169,7 +171,7 @@ describe('PreferencesEffects', () => {
   });
 
   describe('updateSavedFilter$', () => {
-    it('should handle updateSavedFilter action', (done) => {
+    it('should handle updateSavedFilter action', (done: DoneFn) => {
       const mockFilter: SavedFilter = {
         id: 'filter-1',
         name: 'Updated Filter',
@@ -184,7 +186,7 @@ describe('PreferencesEffects', () => {
       });
     });
 
-    it('should dispatch updatePreferences after updating filter', (done) => {
+    it('should dispatch updatePreferences after updating filter', (done: DoneFn) => {
       const mockFilter: SavedFilter = {
         id: 'filter-1',
         name: 'Updated Engineering Filter',
@@ -201,7 +203,7 @@ describe('PreferencesEffects', () => {
   });
 
   describe('Error Handling', () => {
-    it('should implement retry logic with exponential backoff', (done) => {
+    it('should implement retry logic with exponential backoff', (done: DoneFn) => {
       actions$ = of(PreferencesActions.loadPreferences());
       effects.loadPreferences$.subscribe((result: any) => {
         expect(result).toBeDefined();

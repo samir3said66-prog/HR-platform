@@ -5,6 +5,8 @@ import { DashboardEffects } from './dashboard.effects';
 import * as DashboardActions from './dashboard.actions';
 import { DashboardConfig, DashboardMetrics } from './dashboard.state';
 
+type DoneFn = () => void;
+
 /**
  * Test Suite: Dashboard Effects
  * 
@@ -30,7 +32,7 @@ describe('DashboardEffects', () => {
   });
 
   describe('loadDashboardConfigs$', () => {
-    it('should return loadDashboardConfigsSuccess action on success', (done) => {
+    it('should return loadDashboardConfigsSuccess action on success', (done: DoneFn) => {
       actions$ = of(DashboardActions.loadDashboardConfigs());
       effects.loadDashboardConfigs$.subscribe((result: any) => {
         expect(result.type).toBe(DashboardActions.loadDashboardConfigsSuccess.type);
@@ -38,7 +40,7 @@ describe('DashboardEffects', () => {
       });
     });
 
-    it('should handle loadDashboardConfigs action and dispatch success', (done) => {
+    it('should handle loadDashboardConfigs action and dispatch success', (done: DoneFn) => {
       actions$ = of(DashboardActions.loadDashboardConfigs());
       effects.loadDashboardConfigs$.subscribe((result: any) => {
         expect(result).toBeDefined();
@@ -49,7 +51,7 @@ describe('DashboardEffects', () => {
   });
 
   describe('loadDashboardMetrics$', () => {
-    it('should return loadDashboardMetricsSuccess action on success', (done) => {
+    it('should return loadDashboardMetricsSuccess action on success', (done: DoneFn) => {
       actions$ = of(DashboardActions.loadDashboardMetrics());
       effects.loadDashboardMetrics$.subscribe((result: any) => {
         expect(result.type).toBe(DashboardActions.loadDashboardMetricsSuccess.type);
@@ -57,7 +59,7 @@ describe('DashboardEffects', () => {
       });
     });
 
-    it('should handle loadDashboardMetrics action and dispatch success', (done) => {
+    it('should handle loadDashboardMetrics action and dispatch success', (done: DoneFn) => {
       actions$ = of(DashboardActions.loadDashboardMetrics());
       effects.loadDashboardMetrics$.subscribe((result: any) => {
         expect(result).toBeDefined();
@@ -68,7 +70,7 @@ describe('DashboardEffects', () => {
   });
 
   describe('createDashboardConfig$', () => {
-    it('should handle createDashboardConfig action', (done) => {
+    it('should handle createDashboardConfig action', (done: DoneFn) => {
       const mockConfig: DashboardConfig = {
         id: 'config-1',
         name: 'Main Dashboard',
@@ -86,7 +88,7 @@ describe('DashboardEffects', () => {
       });
     });
 
-    it('should dispatch loadDashboardConfigs after creating config', (done) => {
+    it('should dispatch loadDashboardConfigs after creating config', (done: DoneFn) => {
       const mockConfig: DashboardConfig = {
         id: 'config-2',
         name: 'Performance Dashboard',
@@ -106,7 +108,7 @@ describe('DashboardEffects', () => {
   });
 
   describe('updateDashboardConfig$', () => {
-    it('should handle updateDashboardConfig action', (done) => {
+    it('should handle updateDashboardConfig action', (done: DoneFn) => {
       const mockConfig: DashboardConfig = {
         id: 'config-1',
         name: 'Updated Dashboard',
@@ -124,11 +126,11 @@ describe('DashboardEffects', () => {
       });
     });
 
-    it('should dispatch loadDashboardConfigs after updating config', (done) => {
+    it('should dispatch loadDashboardConfigs after updating config', (done: DoneFn) => {
       const mockConfig: DashboardConfig = {
         id: 'config-1',
         name: 'Main Dashboard Updated',
-        layout: 'flex',
+        layout: 'grid',
         widgets: [],
         isDefault: true,
         createdAt: new Date().toISOString(),
@@ -144,7 +146,7 @@ describe('DashboardEffects', () => {
   });
 
   describe('deleteDashboardConfig$', () => {
-    it('should handle deleteDashboardConfig action', (done) => {
+    it('should handle deleteDashboardConfig action', (done: DoneFn) => {
       actions$ = of(DashboardActions.deleteDashboardConfig({ configId: 'config-1' }));
       effects.deleteDashboardConfig$.subscribe((result: any) => {
         expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
@@ -152,7 +154,7 @@ describe('DashboardEffects', () => {
       });
     });
 
-    it('should dispatch loadDashboardConfigs after deleting config', (done) => {
+    it('should dispatch loadDashboardConfigs after deleting config', (done: DoneFn) => {
       actions$ = of(DashboardActions.deleteDashboardConfig({ configId: 'config-2' }));
       effects.deleteDashboardConfig$.subscribe((result: any) => {
         expect(result.type).toBe(DashboardActions.loadDashboardConfigs.type);
@@ -162,7 +164,7 @@ describe('DashboardEffects', () => {
   });
 
   describe('Error Handling', () => {
-    it('should implement retry logic with exponential backoff', (done) => {
+    it('should implement retry logic with exponential backoff', (done: DoneFn) => {
       actions$ = of(DashboardActions.loadDashboardConfigs());
       effects.loadDashboardConfigs$.subscribe((result: any) => {
         expect(result).toBeDefined();

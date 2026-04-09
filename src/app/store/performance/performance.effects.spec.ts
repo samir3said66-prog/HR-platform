@@ -5,6 +5,8 @@ import { PerformanceEffects } from './performance.effects';
 import * as PerformanceActions from './performance.actions';
 import { PerformanceMetric } from './performance.state';
 
+type DoneFn = () => void;
+
 /**
  * Test Suite: Performance Effects
  * 
@@ -29,7 +31,7 @@ describe('PerformanceEffects', () => {
   });
 
   describe('loadPerformanceMetrics$', () => {
-    it('should return loadPerformanceMetricsSuccess action on success', (done) => {
+    it('should return loadPerformanceMetricsSuccess action on success', (done: DoneFn) => {
       actions$ = of(PerformanceActions.loadPerformanceMetrics());
       effects.loadPerformanceMetrics$.subscribe((result: any) => {
         expect(result.type).toBe(PerformanceActions.loadPerformanceMetricsSuccess.type);
@@ -37,7 +39,7 @@ describe('PerformanceEffects', () => {
       });
     });
 
-    it('should handle loadPerformanceMetrics action and dispatch success', (done) => {
+    it('should handle loadPerformanceMetrics action and dispatch success', (done: DoneFn) => {
       actions$ = of(PerformanceActions.loadPerformanceMetrics());
       effects.loadPerformanceMetrics$.subscribe((result: any) => {
         expect(result).toBeDefined();
@@ -48,7 +50,7 @@ describe('PerformanceEffects', () => {
   });
 
   describe('addPerformanceMetric$', () => {
-    it('should handle addPerformanceMetric action', (done) => {
+    it('should handle addPerformanceMetric action', (done: DoneFn) => {
       const mockMetric: PerformanceMetric = {
         id: '1',
         employeeId: '1',
@@ -65,7 +67,7 @@ describe('PerformanceEffects', () => {
       });
     });
 
-    it('should dispatch loadPerformanceMetrics after adding metric', (done) => {
+    it('should dispatch loadPerformanceMetrics after adding metric', (done: DoneFn) => {
       const mockMetric: PerformanceMetric = {
         id: '2',
         employeeId: '2',
@@ -84,7 +86,7 @@ describe('PerformanceEffects', () => {
   });
 
   describe('updatePerformanceMetric$', () => {
-    it('should handle updatePerformanceMetric action', (done) => {
+    it('should handle updatePerformanceMetric action', (done: DoneFn) => {
       const mockMetric: PerformanceMetric = {
         id: '1',
         employeeId: '1',
@@ -101,7 +103,7 @@ describe('PerformanceEffects', () => {
       });
     });
 
-    it('should dispatch loadPerformanceMetrics after updating metric', (done) => {
+    it('should dispatch loadPerformanceMetrics after updating metric', (done: DoneFn) => {
       const mockMetric: PerformanceMetric = {
         id: '1',
         employeeId: '1',
@@ -120,7 +122,7 @@ describe('PerformanceEffects', () => {
   });
 
   describe('deletePerformanceMetric$', () => {
-    it('should handle deletePerformanceMetric action', (done) => {
+    it('should handle deletePerformanceMetric action', (done: DoneFn) => {
       actions$ = of(PerformanceActions.deletePerformanceMetric({ id: '1' }));
       effects.deletePerformanceMetric$.subscribe((result: any) => {
         expect(result.type).toBe(PerformanceActions.loadPerformanceMetrics.type);
@@ -128,7 +130,7 @@ describe('PerformanceEffects', () => {
       });
     });
 
-    it('should dispatch loadPerformanceMetrics after deleting metric', (done) => {
+    it('should dispatch loadPerformanceMetrics after deleting metric', (done: DoneFn) => {
       actions$ = of(PerformanceActions.deletePerformanceMetric({ id: '2' }));
       effects.deletePerformanceMetric$.subscribe((result: any) => {
         expect(result.type).toBe(PerformanceActions.loadPerformanceMetrics.type);
@@ -138,7 +140,7 @@ describe('PerformanceEffects', () => {
   });
 
   describe('Error Handling', () => {
-    it('should implement retry logic with exponential backoff', (done) => {
+    it('should implement retry logic with exponential backoff', (done: DoneFn) => {
       actions$ = of(PerformanceActions.loadPerformanceMetrics());
       effects.loadPerformanceMetrics$.subscribe((result: any) => {
         expect(result).toBeDefined();

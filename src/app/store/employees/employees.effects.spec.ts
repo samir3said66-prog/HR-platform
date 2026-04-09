@@ -6,6 +6,8 @@ import { EmployeeEffects } from './employees.effects';
 import * as EmployeeActions from './employees.actions';
 import { Employee } from './employees.state';
 
+type DoneFn = () => void;
+
 /**
  * Test Suite: Employee Effects
  * 
@@ -33,20 +35,18 @@ describe('EmployeeEffects', () => {
   });
 
   describe('loadEmployees$', () => {
-    it('should return loadEmployeesSuccess action on success', (done) => {
+    it('should return loadEmployeesSuccess action on success', (done: DoneFn) => {
       actions$ = of(EmployeeActions.loadEmployees());
       const effect$ = (employeeEffects as any).loadEmployees$ as Observable<any>;
-      // @ts-ignore - Vitest type conflict
       effect$.subscribe((result: any) => {
         expect(result.type).toBe(EmployeeActions.loadEmployeesSuccess.type);
         done();
       });
     });
 
-    it('should handle loadEmployees action and dispatch success', (done) => {
+    it('should handle loadEmployees action and dispatch success', (done: DoneFn) => {
       actions$ = of(EmployeeActions.loadEmployees());
       const effect$ = (employeeEffects as any).loadEmployees$ as Observable<any>;
-      // @ts-ignore - Vitest type conflict
       effect$.subscribe((result: any) => {
         expect(result).toBeDefined();
         expect(result.type).toBeDefined();
@@ -56,7 +56,7 @@ describe('EmployeeEffects', () => {
   });
 
   describe('addEmployee$', () => {
-    it('should handle addEmployee action', (done) => {
+    it('should handle addEmployee action', (done: DoneFn) => {
       const mockEmployee: Employee = {
         id: '1',
         name: 'John Doe',
@@ -70,14 +70,13 @@ describe('EmployeeEffects', () => {
 
       actions$ = of(EmployeeActions.addEmployee({ employee: mockEmployee }));
       const effect$ = (employeeEffects as any).addEmployee$ as Observable<any>;
-      // @ts-ignore - Vitest type conflict
       effect$.subscribe((result: any) => {
         expect(result.type).toBe(EmployeeActions.loadEmployees.type);
         done();
       });
     });
 
-    it('should dispatch loadEmployees after adding employee', (done) => {
+    it('should dispatch loadEmployees after adding employee', (done: DoneFn) => {
       const mockEmployee: Employee = {
         id: '2',
         name: 'Jane Smith',
@@ -91,7 +90,6 @@ describe('EmployeeEffects', () => {
 
       actions$ = of(EmployeeActions.addEmployee({ employee: mockEmployee }));
       const effect$ = (employeeEffects as any).addEmployee$ as Observable<any>;
-      // @ts-ignore - Vitest type conflict
       effect$.subscribe((result: any) => {
         expect(result.type).toBe(EmployeeActions.loadEmployees.type);
         done();
@@ -100,7 +98,7 @@ describe('EmployeeEffects', () => {
   });
 
   describe('updateEmployee$', () => {
-    it('should handle updateEmployee action', (done) => {
+    it('should handle updateEmployee action', (done: DoneFn) => {
       const mockEmployee: Employee = {
         id: '1',
         name: 'John Doe Updated',
@@ -114,14 +112,13 @@ describe('EmployeeEffects', () => {
 
       actions$ = of(EmployeeActions.updateEmployee({ employee: mockEmployee }));
       const effect$ = (employeeEffects as any).updateEmployee$ as Observable<any>;
-      // @ts-ignore - Vitest type conflict
       effect$.subscribe((result: any) => {
         expect(result.type).toBe(EmployeeActions.loadEmployees.type);
         done();
       });
     });
 
-    it('should dispatch loadEmployees after updating employee', (done) => {
+    it('should dispatch loadEmployees after updating employee', (done: DoneFn) => {
       const mockEmployee: Employee = {
         id: '1',
         name: 'John Doe',
@@ -135,7 +132,6 @@ describe('EmployeeEffects', () => {
 
       actions$ = of(EmployeeActions.updateEmployee({ employee: mockEmployee }));
       const effect$ = (employeeEffects as any).updateEmployee$ as Observable<any>;
-      // @ts-ignore - Vitest type conflict
       effect$.subscribe((result: any) => {
         expect(result.type).toBe(EmployeeActions.loadEmployees.type);
         done();
@@ -144,20 +140,18 @@ describe('EmployeeEffects', () => {
   });
 
   describe('deleteEmployee$', () => {
-    it('should handle deleteEmployee action', (done) => {
+    it('should handle deleteEmployee action', (done: DoneFn) => {
       actions$ = of(EmployeeActions.deleteEmployee({ id: '1' }));
       const effect$ = (employeeEffects as any).deleteEmployee$ as Observable<any>;
-      // @ts-ignore - Vitest type conflict
       effect$.subscribe((result: any) => {
         expect(result.type).toBe(EmployeeActions.loadEmployees.type);
         done();
       });
     });
 
-    it('should dispatch loadEmployees after deleting employee', (done) => {
+    it('should dispatch loadEmployees after deleting employee', (done: DoneFn) => {
       actions$ = of(EmployeeActions.deleteEmployee({ id: '2' }));
       const effect$ = (employeeEffects as any).deleteEmployee$ as Observable<any>;
-      // @ts-ignore - Vitest type conflict
       effect$.subscribe((result: any) => {
         expect(result.type).toBe(EmployeeActions.loadEmployees.type);
         done();
@@ -166,10 +160,9 @@ describe('EmployeeEffects', () => {
   });
 
   describe('Error Handling', () => {
-    it('should implement retry logic with exponential backoff', (done) => {
+    it('should implement retry logic with exponential backoff', (done: DoneFn) => {
       actions$ = of(EmployeeActions.loadEmployees());
       const effect$ = (employeeEffects as any).loadEmployees$ as Observable<any>;
-      // @ts-ignore - Vitest type conflict
       effect$.subscribe((result: any) => {
         expect(result).toBeDefined();
         expect(result.type).toBeDefined();
