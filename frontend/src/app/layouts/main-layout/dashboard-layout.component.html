@@ -19,6 +19,7 @@
     [class.sidebar-open]="isSidebarOpen()"
     [class.sidebar-closed-ltr]="!isSidebarOpen() && !i18nService.isArabic()"
     [class.sidebar-closed-rtl]="!isSidebarOpen() && i18nService.isArabic()"
+    [class.sidebar-collapsed]="isSidebarCollapsed()"
   >
     <!-- Brand -->
     <div class="sidebar-brand">
@@ -55,6 +56,8 @@
         [routerLink]="link.path"
         routerLinkActive="nav-active"
         class="nav-item"
+        [attr.data-tooltip]="link.label"
+        (click)="onNavItemClick()"
       >
         <span class="nav-icon" [innerHTML]="link.icon"></span>
         <span class="nav-label">{{ i18nService.translate(link.labelKey) || link.label }}</span>
@@ -71,6 +74,8 @@
         routerLink="/settings"
         routerLinkActive="nav-active"
         class="nav-item"
+        [attr.data-tooltip]="'Settings'"
+        (click)="onNavItemClick()"
       >
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
@@ -82,7 +87,7 @@
         <span class="nav-pip"></span>
       </a>
 
-      <button class="nav-item nav-logout" (click)="logout()">
+      <button class="nav-item nav-logout" (click)="logout(); onNavItemClick()" [attr.data-tooltip]="'Logout'">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -95,7 +100,7 @@
     </div>
 
     <!-- User Card -->
-    <div class="sidebar-user">
+    <div class="sidebar-user" [title]="!isSidebarCollapsed() ? '' : (currentUser()?.name || 'User')">
       <div class="sidebar-user-avatar">{{ (currentUser()?.name || 'U')[0] }}</div>
       <div class="sidebar-user-info">
         <span class="sidebar-user-name">{{ currentUser()?.name || 'User' }}</span>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject, AfterViewInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { RouterOutlet, RouterModule, Router, NavigationEnd } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -47,18 +47,20 @@ interface User {
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.css'
 })
-export class DashboardLayoutComponent implements OnInit, OnDestroy {
+export class DashboardLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
   // Services
   public i18nService = inject(I18nService);
   public themeService = inject(ThemeService);
   private authService = inject(AuthService);
   private router = inject(Router);
   private sanitizer = inject(DomSanitizer);
+  private cdr = inject(ChangeDetectorRef);
 
   private svg(s: string): SafeHtml { return this.sanitizer.bypassSecurityTrustHtml(s); }
 
   // Signals
   public isSidebarOpen = signal(false);
+  public isSidebarCollapsed = signal(false);
   public isUserMenuOpen = signal(false);
   public pageTitle = signal('Dashboard');
   public breadcrumbItems = signal<BreadcrumbItemData[]>([]);
@@ -94,10 +96,94 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
     this.loadCurrentUser();
   }
 
+  ngAfterViewInit(): void {
+    // Setup tooltip positioning for sidebar nav items
+    this.setupTooltips();
+  }
+
   ngOnDestroy(): void {
     if (this.navigationSubscription) {
       this.navigationSubscription.unsubscribe();
     }
+  }
+
+  /**
+   * Setup tooltip positioning for nav items on mid/small screens
+   */
+  private setupTooltips(): void {
+    const navItems = document.querySelectorAll('.nav-item[data-tooltip]');
+    
+    navItems.forEach((item: Element) => {
+      const navItem = item as HTMLElement;
+      
+      navItem.addEventListener('mouseenter', (e: Event) => {
+        if (window.innerWidth >= 1024) return; // Only on mid/small screens
+        
+        const target = e.target as HTMLElement;
+        const closestNavItem = target.closest('.nav-item') as HTMLElement;
+        const rect = closestNavItem.getBoundingClientRect();
+        const tooltip = this.getOrCreateTooltip();
+        
+        tooltip.textContent = closestNavItem.getAttribute('data-tooltip') || '';
+        
+        // Check if RTL
+        const isRTL = document.documentElement.dir === 'rtl' || this.i18nService.isArabic();
+        
+        if (isRTL) {
+          // RTL: position to the left
+          tooltip.style.right = (window.innerWidth - rect.left + 12) + 'px';
+          tooltip.style.left = 'auto';
+        } else {
+          // LTR: position to the right
+          tooltip.style.left = (rect.right + 12) + 'px';
+          tooltip.style.right = 'auto';
+        }
+        
+        // Vertical center
+        tooltip.style.top = (rect.top + rect.height / 2) + 'px';
+        tooltip.style.transform = 'translateY(-50%)';
+        tooltip.style.opacity = '1';
+        tooltip.style.pointerEvents = 'auto';
+      });
+      
+      navItem.addEventListener('mouseleave', () => {
+        const tooltip = document.getElementById('tooltip-container');
+        if (tooltip) {
+          tooltip.style.opacity = '0';
+          tooltip.style.pointerEvents = 'none';
+        }
+      });
+    });
+  }
+
+  /**
+   * Get or create a global tooltip container
+   */
+  private getOrCreateTooltip(): HTMLElement {
+    let tooltip = document.getElementById('tooltip-container');
+    
+    if (!tooltip) {
+      tooltip = document.createElement('div');
+      tooltip.id = 'tooltip-container';
+      tooltip.style.cssText = `
+        position: fixed;
+        background-color: var(--color-primary, #4f6ef7);
+        color: white;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        z-index: 99999;
+        box-shadow: 0 6px 20px rgba(79,110,247,0.4);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms ease-out;
+      `;
+      document.body.appendChild(tooltip);
+    }
+    
+    return tooltip;
   }
 
   /**
@@ -112,6 +198,16 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
    */
   public closeSidebar(): void {
     this.isSidebarOpen.set(false);
+  }
+
+  /**
+   * Handle nav item click - close sidebar on mobile
+   */
+  public onNavItemClick(): void {
+    // Close sidebar on mobile (<768px)
+    if (window.innerWidth < 768) {
+      this.isSidebarOpen.set(false);
+    }
   }
 
   /**

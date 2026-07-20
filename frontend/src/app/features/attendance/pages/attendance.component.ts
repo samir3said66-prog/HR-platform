@@ -9,42 +9,84 @@ import { CommonModule } from '@angular/common';
   styles: [`
     :host { display: block; }
     .page { padding: 28px; }
+    @media(max-width:600px) { .page { padding: 16px; } }
 
     .top-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
     @media(max-width:900px) { .top-grid { grid-template-columns:repeat(2,1fr); } }
-    @media(max-width:500px) { .top-grid { grid-template-columns:1fr; } }
+    @media(max-width:600px) { .top-grid { grid-template-columns:1fr; gap:10px; margin-bottom:16px; } }
 
-    .main-grid { display:grid; grid-template-columns:1fr 300px; gap:16px; }
-    @media(max-width:900px) { .main-grid { grid-template-columns:1fr; } }
+    /* Main content grid */
+    .main-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:1200px) { .main-grid { grid-template-columns:1fr; } }
 
-    .card-head { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 12px; border-bottom:1px solid var(--surface-divider); }
+    /* Left column - Calendar + Table */
+    .content-left { display:flex; flex-direction:column; gap:16px; }
+    @media(max-width:600px) { .content-left { gap:12px; } }
+
+    /* Right column - Side cards */
+    .content-right { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:1200px) { .content-right { grid-template-columns:1fr; } }
+    @media(max-width:768px) { .content-right { grid-template-columns:1fr 1fr; } }
+    @media(max-width:600px) { .content-right { grid-template-columns:1fr; gap:12px; } }
+
+    .card-head { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 12px; border-bottom:1px solid var(--surface-divider); flex-wrap:wrap; gap:8px; }
+    @media(max-width:600px) { .card-head { padding:12px 16px 10px; } }
+    
     .card-head-title { font-size:14px; font-weight:600; color:var(--gray-900); }
+    @media(max-width:600px) { .card-head-title { font-size:13px; } }
+    
     .card-body { padding:16px 20px; }
+    @media(max-width:600px) { .card-body { padding:12px 16px; } }
 
     /* Calendar heat */
     .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+    @media(max-width:600px) { .cal-grid { gap:2px; } }
+    
     .cal-day-label { font-size:10px; font-weight:600; text-align:center; color:var(--gray-400); padding-bottom:4px; text-transform:uppercase; letter-spacing:.04em; }
+    @media(max-width:600px) { .cal-day-label { font-size:8px; padding-bottom:2px; } }
+    
     .cal-cell {
       aspect-ratio:1; border-radius:4px; display:flex; align-items:center; justify-content:center;
       font-size:10.5px; color:var(--gray-400); cursor:pointer; transition:all var(--t-fast);
-      border:1px solid transparent;
+      border:1px solid transparent; min-height:32px;
     }
+    @media(max-width:600px) { .cal-cell { font-size:9px; min-height:28px; border-radius:3px; } }
+    
     .cal-cell:hover { border-color:var(--color-primary); color:var(--color-primary); }
     .cal-cell.empty { cursor:default; }
     .cal-cell.has-data { color:#fff; font-weight:600; }
     .cal-cell.today { outline:2px solid var(--color-primary); outline-offset:1px; }
 
     /* Absence reasons */
-    .reason-row { display:flex; align-items:center; gap:10px; padding:8px 0; }
+    .reason-row { display:flex; align-items:center; gap:10px; padding:8px 0; flex-wrap:wrap; }
     .reason-row + .reason-row { border-top:1px solid var(--surface-divider); }
     .reason-dot { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
-    .reason-label { font-size:12.5px; color:var(--gray-700); flex:1; }
+    .reason-label { font-size:12.5px; color:var(--gray-700); flex:1; min-width:80px; }
     .reason-val { font-size:12.5px; font-weight:600; color:var(--gray-900); }
     .reason-pct { font-size:11px; color:var(--gray-400); margin-left:4px; }
+    @media(max-width:600px) { 
+      .reason-row { padding:6px 0; gap:8px; }
+      .reason-label { font-size:11.5px; min-width:70px; }
+      .reason-val { font-size:11.5px; }
+      .reason-pct { font-size:10px; margin-left:2px; }
+    }
 
     /* Table */
-    .table-card { background:var(--surface-card); border:var(--card-border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); overflow:hidden; }
+    .table-card { background:var(--surface-card); border:var(--card-border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); overflow:hidden; overflow-x:auto; }
     .att-avatar { width:32px; height:32px; border-radius:7px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px; font-weight:700; flex-shrink:0; }
+    @media(max-width:600px) { .att-avatar { width:28px; height:28px; font-size:10px; } }
+    
+    table { width:100%; font-size:13px; border-collapse:collapse; }
+    @media(max-width:600px) { 
+      table { font-size:11px; }
+      th, td { padding:8px 10px; }
+      th { background:var(--surface-hover); font-weight:600; }
+    }
+    
+    /* Progress bar */
+    .progress-bar { width:100%; height:6px; background:var(--surface-hover); border-radius:3px; overflow:hidden; }
+    .progress-fill { height:100%; border-radius:3px; transition:width var(--t-fast); }
+    @media(max-width:600px) { .progress-bar { height:5px; } }
   `],
   template: `
 <div class="page">
@@ -77,9 +119,8 @@ import { CommonModule } from '@angular/common';
   </div>
 
   <div class="main-grid">
-    <!-- Calendar + table -->
-    <div style="display:flex;flex-direction:column;gap:16px;">
-
+    <!-- Left column: Calendar + Table -->
+    <div class="content-left">
       <!-- Attendance heat calendar -->
       <div class="card-3d">
         <div class="card-head">
@@ -145,8 +186,8 @@ import { CommonModule } from '@angular/common';
       </div>
     </div>
 
-    <!-- Side panel -->
-    <div style="display:flex;flex-direction:column;gap:16px;">
+    <!-- Right column: Side cards (Absence Reasons + Late Arrivals) -->
+    <div class="content-right">
       <!-- Absence reasons -->
       <div class="card-3d">
         <div class="card-head"><div class="card-head-title">Absence Reasons</div></div>

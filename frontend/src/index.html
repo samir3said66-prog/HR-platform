@@ -98,26 +98,18 @@
     
     <!-- =============================================
          Favicon & Icon Set
-         Primary:  /favicon.svg        (browser tab, all modern browsers)
-         Fallback: /favicon.ico        (legacy browsers)
-         iOS:      /apple-touch-icon.svg (home screen, 180×180)
-         Sizes:    /assets/images/icons/icon-{16|32|48|64|96|192|512}.svg
+         Primary:  favicon.svg        (browser tab, all modern browsers)
+         Fallback: favicon.ico        (legacy browsers)
+         iOS:      apple-touch-icon.svg (home screen, 180×180)
          ============================================= -->
     <!-- Primary SVG favicon — scales perfectly at all sizes -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
     <!-- ICO fallback for IE / old browsers -->
-    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
-    <!-- Sized PNG-equivalent icons for explicit size requests -->
-    <link rel="icon" type="image/svg+xml" href="/assets/images/icons/icon-16.svg"  sizes="16x16" />
-    <link rel="icon" type="image/svg+xml" href="/assets/images/icons/icon-32.svg"  sizes="32x32" />
-    <link rel="icon" type="image/svg+xml" href="/assets/images/icons/icon-48.svg"  sizes="48x48" />
-    <link rel="icon" type="image/svg+xml" href="/assets/images/icons/icon-64.svg"  sizes="64x64" />
-    <link rel="icon" type="image/svg+xml" href="/assets/images/icons/icon-96.svg"  sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/assets/images/icons/icon-192.svg" sizes="192x192" />
+    <link rel="alternate icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- iOS / iPadOS home screen icon (180×180, no rounding — system clips) -->
-    <link rel="apple-touch-icon" type="image/svg+xml" href="/apple-touch-icon.svg" sizes="180x180" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.svg" />
     <!-- PWA manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="manifest.json" />
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://hrplatform.com/" />
@@ -143,16 +135,15 @@
     <link rel="prefetch" href="https://api.hrplatform.com/health" />
     
     <!-- Preload Critical Resources -->
-    <link rel="preload" as="font"  href="/assets/fonts/main.woff2" type="font/woff2" crossorigin />
-    <link rel="preload" as="image" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preload" as="image" href="/assets/images/icons/icon-192.svg" type="image/svg+xml" />
+    <link rel="preload" as="font"  href="assets/fonts/main.woff2" type="font/woff2" crossorigin />
+    <link rel="preload" as="image" href="assets/favicon.svg" type="image/svg+xml" />
     
     <!-- Performance Optimization -->
     <meta http-equiv="Cache-Control" content="public, max-age=3600" />
     
     <!-- Browser Theme -->
     <meta name="msapplication-TileColor" content="#3b82f6" />
-    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="msapplication-config" content="browserconfig.xml" />
   </head>
   <body>
     <app-root></app-root>
@@ -163,6 +154,18 @@
         <p style="color: #999; font-size: 14px;">Please enable JavaScript in your browser settings and try again.</p>
       </div>
     </noscript>
+    
+    <!-- Clear favicon cache on page load -->
+    <script>
+      (function() {
+        // Force favicon refresh
+        const favicon = document.querySelector("link[rel*='icon']");
+        if (favicon) {
+          const href = favicon.href.split('?')[0];
+          favicon.href = href + '?t=' + new Date().getTime();
+        }
+      })();
+    </script>
     
     <!-- Google Analytics (when domain is ready) -->
     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_ID"></script>
