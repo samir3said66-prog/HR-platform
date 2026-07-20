@@ -12,18 +12,20 @@ import { CommonModule } from '@angular/common';
 
     .top-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
     }
-    @media(max-width:900px) { .top-grid { grid-template-columns: 1fr; } }
+    @media(max-width: 768px) { .top-grid { grid-template-columns: 1fr; } }
 
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 320px;
       gap: 16px;
+      margin-bottom: 24px;
     }
-    @media(max-width:900px) { .main-grid { grid-template-columns: 1fr; } }
+    @media(max-width: 1200px) { .main-grid { grid-template-columns: 1fr; } }
+    @media(max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
 
     .card-head { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 12px; border-bottom:1px solid var(--surface-divider); }
     .card-head-title { font-size:14px; font-weight:600; color:var(--gray-900); }
@@ -37,11 +39,63 @@ import { CommonModule } from '@angular/common';
     .perf-dept { font-size:11.5px; color:var(--gray-400); }
     .perf-score { font-size:15px; font-weight:700; min-width:40px; text-align:right; }
 
-    /* Goal item */
-    .goal-item { padding:12px 0; }
-    .goal-item + .goal-item { border-top:1px solid var(--surface-divider); }
-    .goal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-    .goal-name { font-size:13px; font-weight:500; color:var(--gray-800); }
+    /* Goal item - Enhanced styling */
+    .goal-item {
+      padding: 16px;
+      border-radius: var(--radius-base);
+      background: var(--gray-50);
+      border: 1px solid var(--surface-border);
+      transition: all var(--t-fast);
+    }
+    .goal-item:hover {
+      background: var(--surface-card);
+      border-color: var(--color-primary-light);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    .goal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .goal-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--gray-900);
+      flex: 1;
+      min-width: 0;
+    }
+    .goal-owner {
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-top: 6px;
+      white-space: nowrap;
+    }
+    .goal-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      gap: 8px;
+    }
+    .goal-progress-pct {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gray-900);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    /* Goals grid - Responsive */
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      padding: 16px 20px;
+    }
+    @media(max-width: 1200px) { .goals-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
+    @media(max-width: 768px) { .goals-grid { grid-template-columns: 1fr; } }
 
     /* Rating stars */
     .stars { display:flex; gap:3px; }
@@ -147,18 +201,18 @@ import { CommonModule } from '@angular/common';
       <div class="card-head-title">Team Goals Progress</div>
       <button class="btn btn-secondary btn-sm">+ Add Goal</button>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0;">
-      <div *ngFor="let g of goals; let i=index" class="goal-item card-body" [style.border-right]="i%2===0?'1px solid var(--surface-divider)':''">
+    <div class="goals-grid">
+      <div *ngFor="let g of goals" class="goal-item">
         <div class="goal-header">
           <span class="goal-name">{{ g.name }}</span>
           <span class="badge" [ngClass]="g.statusClass">{{ g.status }}</span>
         </div>
-        <div class="progress-bar" style="height:8px;">
+        <div class="progress-bar" style="height:6px;margin-bottom:10px;">
           <div class="progress-fill" [style.width.%]="g.progress" [style.background]="g.color"></div>
         </div>
-        <div style="display:flex;justify-content:space-between;margin-top:6px;">
-          <span style="font-size:11.5px;color:var(--gray-400);">{{ g.owner }}</span>
-          <span style="font-size:12px;font-weight:600;color:var(--gray-700);">{{ g.progress }}%</span>
+        <div class="goal-meta">
+          <span class="goal-owner">{{ g.owner }}</span>
+          <span class="goal-progress-pct">{{ g.progress }}%</span>
         </div>
       </div>
     </div>

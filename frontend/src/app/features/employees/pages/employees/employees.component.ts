@@ -1,11 +1,12 @@
 import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DropdownComponent } from '../../../../shared/components/ui/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     :host { display: block; }
@@ -82,11 +83,11 @@ import { FormsModule } from '@angular/forms';
       </div>
       <button *ngFor="let d of deptFilters" class="filter-chip" [class.active]="activeFilter()===d" (click)="activeFilter.set(d)">{{ d }}</button>
     </div>
-    <select class="input" style="width:auto;height:36px;font-size:13px;padding:0 10px;" [(ngModel)]="sortBy">
-      <option value="name">Sort: Name</option>
-      <option value="dept">Sort: Department</option>
-      <option value="score">Sort: Performance</option>
-    </select>
+    <app-dropdown
+      [triggerLabel]="'Sort: ' + sortLabels[sortBy]"
+      [items]="sortItems"
+      (onSelect)="onSortSelect($event)"
+    ></app-dropdown>
   </div>
 
   <!-- Table -->
@@ -157,6 +158,28 @@ export class EmployeesComponent {
   currentPage = signal(1);
   activeFilter = signal('All');
   deptFilters = ['All', 'Engineering', 'Sales', 'Marketing', 'HR', 'Finance'];
+
+  sortLabels: { [key: string]: string } = {
+    name: 'Name',
+    dept: 'Department',
+    score: 'Performance',
+  };
+
+  sortItems = [
+    { label: 'Name', icon: undefined },
+    { label: 'Department', icon: undefined },
+    { label: 'Performance', icon: undefined },
+  ];
+
+  onSortSelect(item: any): void {
+    const sortMap: { [key: string]: string } = {
+      'Name': 'name',
+      'Department': 'dept',
+      'Performance': 'score',
+    };
+    this.sortBy = sortMap[item.label] || 'name';
+    this.currentPage.set(1);
+  }
 
   employees = [
     { name: 'Sarah Mitchell',  email: 'sarah@company.com',  department: 'Engineering', role: 'Senior Engineer',     status: 'Active',   statusClass: 'badge-success', performance: 97, perfColor: '#16a34a', joined: 'Jan 2022', initials: 'SM', avatarColor: '#4f6ef7' },

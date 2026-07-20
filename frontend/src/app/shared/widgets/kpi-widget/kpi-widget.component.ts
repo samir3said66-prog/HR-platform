@@ -42,7 +42,7 @@ export interface KPIData {
       padding: 1.5rem;
       border-radius: 0.5rem;
       background: white;
-      border-left: 4px solid #3b82f6;
+      border: 1px solid #e5e7eb;
     }
 
     .kpi-header {
@@ -98,21 +98,10 @@ export interface KPIData {
       color: #f59e0b;
     }
 
-    .kpi-blue {
-      border-left-color: #3b82f6;
-    }
-
-    .kpi-green {
-      border-left-color: #10b981;
-    }
-
-    .kpi-red {
-      border-left-color: #ef4444;
-    }
-
-    .kpi-purple {
-      border-left-color: #8b5cf6;
-    }
+    .kpi-blue { }
+    .kpi-green { }
+    .kpi-red { }
+    .kpi-purple { }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

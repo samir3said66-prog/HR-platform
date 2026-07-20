@@ -364,15 +364,6 @@ tbody tr:last-child { border-bottom: none; }
   position: relative;
   overflow: hidden;
 }
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  background: linear-gradient(90deg, var(--stat-accent, var(--color-primary)), transparent);
-  opacity: 0.6;
-}
 .stat-card:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);

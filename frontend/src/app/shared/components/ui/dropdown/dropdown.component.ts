@@ -25,6 +25,195 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dropdown.component.html',
+  styles: [`
+    :host { display: inline-block; }
+
+    /* Dropdown container */
+    .relative { position: relative; display: inline-block; }
+
+    /* Trigger button */
+    button:first-of-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--color-primary);
+      color: white;
+      border-radius: var(--radius-base);
+      border: none;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      transition: background var(--t-fast), box-shadow var(--t-fast);
+      cursor: pointer;
+      white-space: nowrap;
+      min-width: fit-content;
+    }
+
+    button:first-of-type:hover {
+      background: var(--color-primary-hover);
+      box-shadow: 0 3px 8px rgba(79,110,247,0.3);
+      transform: translateY(-1px);
+    }
+
+    button:first-of-type:active {
+      transform: translateY(0);
+    }
+
+    button:first-of-type:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    /* Dropdown menu container */
+    .absolute {
+      position: absolute;
+      z-index: 200;
+      width: 200px;
+      max-height: 70vh;
+      overflow-y: auto;
+      background: var(--surface-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--surface-border);
+      animation: slideDown 200ms ease-out forwards;
+      right: 0;
+    }
+
+    /* On mobile, make it full width with constraint */
+    @media (max-width: 640px) {
+      .absolute {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        width: auto;
+        max-width: calc(100vw - 24px);
+        max-height: 60vh;
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Menu items container */
+    div[role="menu"] > div {
+      padding: 0.25rem 0;
+    }
+
+    /* Menu items */
+    button[role="menuitem"] {
+      width: 100%;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      color: var(--gray-700);
+      background: transparent;
+      border: none;
+      font-size: var(--font-size-sm);
+      transition: background var(--t-fast), color var(--t-fast);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: inherit;
+      min-height: 40px;
+    }
+
+    button[role="menuitem"]:hover {
+      background: var(--gray-100);
+      color: var(--gray-900);
+    }
+
+    button[role="menuitem"]:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: -2px;
+      background: var(--gray-100);
+    }
+
+    button[role="menuitem"] svg {
+      width: 1rem;
+      height: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* Badge styling */
+    .badge {
+      margin-left: auto;
+      font-size: var(--font-size-xs);
+      background: var(--color-primary);
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Divider */
+    div[role="separator"] {
+      margin: 0.25rem 0;
+      border-top: 1px solid var(--surface-divider);
+    }
+
+    /* Submenu styling */
+    div.relative.group {
+      position: relative;
+    }
+
+    div[role="menu"][class*="left-full"] {
+      position: absolute;
+      left: 100%;
+      top: 0;
+      margin-left: 0.25rem;
+      margin-top: 0;
+    }
+
+    /* Scrollbar styling */
+    .absolute::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .absolute::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .absolute::-webkit-scrollbar-thumb {
+      background: var(--gray-300);
+      border-radius: 3px;
+    }
+
+    .absolute::-webkit-scrollbar-thumb:hover {
+      background: var(--gray-400);
+    }
+
+    /* Dark mode */
+    :host-context(.dark) .absolute {
+      background: var(--surface-card);
+      border-color: var(--surface-border);
+    }
+
+    :host-context(.dark) button[role="menuitem"] {
+      color: var(--gray-300);
+    }
+
+    :host-context(.dark) button[role="menuitem"]:hover {
+      background: var(--gray-200);
+      color: var(--gray-800);
+    }
+
+    :host-context(.dark) .absolute::-webkit-scrollbar-thumb {
+      background: var(--gray-600);
+    }
+
+    :host-context(.dark) .absolute::-webkit-scrollbar-thumb:hover {
+      background: var(--gray-500);
+    }
+  `],
 })
 export class DropdownComponent implements OnDestroy {
   @Input() triggerLabel = 'Menu';
@@ -39,6 +228,7 @@ export class DropdownComponent implements OnDestroy {
   highlightedIndex = signal(-1);
   expandedSubmenu = signal(-1);
   menuId = `dropdown-menu-${Math.random().toString(36).substr(2, 9)}`;
+  menuPositionClass = signal('bottom-full');
 
   private clickOutsideListener: (() => void) | null = null;
 
@@ -46,10 +236,30 @@ export class DropdownComponent implements OnDestroy {
     effect(() => {
       if (this.isOpen()) {
         this.setupClickOutside();
+        setTimeout(() => this.calculateMenuPosition(), 0);
       } else {
         this.removeClickOutside();
       }
     });
+  }
+
+  private calculateMenuPosition(): void {
+    if (!this.menu || !this.triggerButton) return;
+
+    const trigger = this.triggerButton.nativeElement.getBoundingClientRect();
+    const viewport = window.innerHeight;
+    const menuHeight = 300; // Approximate height
+
+    // Check if there's enough space below
+    const spaceBelow = viewport - trigger.bottom;
+    const spaceAbove = trigger.top;
+
+    // If not enough space below, show above
+    if (spaceBelow < menuHeight && spaceAbove > menuHeight) {
+      this.menuPositionClass.set('bottom-full mb-2');
+    } else {
+      this.menuPositionClass.set('top-full mt-2');
+    }
   }
 
   ngOnDestroy(): void {
@@ -133,13 +343,7 @@ export class DropdownComponent implements OnDestroy {
   }
 
   getMenuPositionClasses(): string {
-    const positionClasses = {
-      top: 'bottom-full mb-2',
-      bottom: 'top-full mt-2',
-      left: 'right-full mr-2',
-      right: 'left-full ml-2',
-    };
-    return positionClasses[this.position];
+    return this.menuPositionClass();
   }
 
   private setupClickOutside(): void {

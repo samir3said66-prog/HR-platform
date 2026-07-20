@@ -82,11 +82,11 @@ export interface StatsCardData {
       color: #ef4444;
     }
 
-    .card-primary { border-left: 4px solid #3b82f6; }
-    .card-success { border-left: 4px solid #10b981; }
-    .card-danger { border-left: 4px solid #ef4444; }
-    .card-warning { border-left: 4px solid #f59e0b; }
-    .card-info { border-left: 4px solid #06b6d4; }
+    .card-primary { }
+    .card-success { }
+    .card-danger { }
+    .card-warning { }
+    .card-info { }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
