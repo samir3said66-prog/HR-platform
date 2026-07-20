@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" fill="none">
+  <defs>
+    <linearGradient id="bgTw" x1="0" y1="0" x2="1200" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#1e3a8a"/>
+      <stop offset="60%"  stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="cardTw" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="600" fill="url(#bgTw)"/>
+
+  <!-- Subtle grid -->
+  <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1">
+    <line x1="0" y1="100" x2="1200" y2="100"/>
+    <line x1="0" y1="200" x2="1200" y2="200"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/>
+    <line x1="0" y1="400" x2="1200" y2="400"/>
+    <line x1="0" y1="500" x2="1200" y2="500"/>
+    <line x1="240" y1="0" x2="240" y2="600"/>
+    <line x1="480" y1="0" x2="480" y2="600"/>
+    <line x1="720" y1="0" x2="720" y2="600"/>
+    <line x1="960" y1="0" x2="960" y2="600"/>
+  </g>
+
+  <!-- Glow blobs -->
+  <circle cx="100"  cy="300" r="260" fill="#3b82f6" fill-opacity="0.10"/>
+  <circle cx="1100" cy="310" r="200" fill="#06b6d4" fill-opacity="0.09"/>
+
+  <!-- Logo mark -->
+  <rect x="60" y="52" width="48" height="48" rx="11" fill="#3b82f6"/>
+  <circle cx="78" cy="68" r="6.5" fill="#ffffff"/>
+  <path d="M67 84c0-6.1 4.9-11 11-11s11 4.9 11 11"
+        stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <rect x="92"  y="67" width="6.5" height="13" rx="2" fill="#93c5fd"/>
+  <rect x="101" y="62" width="6.5" height="18" rx="2" fill="#ffffff"/>
+
+  <!-- Brand name -->
+  <text x="122" y="86" font-family="system-ui,-apple-system,sans-serif"
+        font-size="20" font-weight="700" fill="#ffffff" letter-spacing="0.3">HR Analytics Platform</text>
+
+  <!-- Main headline -->
+  <text x="60" y="240" font-family="system-ui,-apple-system,sans-serif"
+        font-size="66" font-weight="800" fill="#ffffff" letter-spacing="-1">Enterprise HR</text>
+  <text x="60" y="320" font-family="system-ui,-apple-system,sans-serif"
+        font-size="66" font-weight="800" fill="#93c5fd" letter-spacing="-1">Management</text>
+
+  <!-- Sub-text -->
+  <text x="60" y="384" font-family="system-ui,-apple-system,sans-serif"
+        font-size="26" font-weight="400" fill="#bfdbfe">
+    Attendance · Payroll · Performance · Analytics
+  </text>
+
+  <!-- Feature pills -->
+  <rect x="60"  y="424" width="148" height="38" rx="19" fill="#ffffff" fill-opacity="0.12"/>
+  <text x="134" y="448" font-family="system-ui,-apple-system,sans-serif"
+        font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">Face Recognition</text>
+
+  <rect x="220" y="424" width="120" height="38" rx="19" fill="#ffffff" fill-opacity="0.12"/>
+  <text x="280" y="448" font-family="system-ui,-apple-system,sans-serif"
+        font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">GPS Tracking</text>
+
+  <rect x="352" y="424" width="124" height="38" rx="19" fill="#ffffff" fill-opacity="0.12"/>
+  <text x="414" y="448" font-family="system-ui,-apple-system,sans-serif"
+        font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">Auto Payroll</text>
+
+  <!-- Right: Stats panel -->
+  <rect x="740" y="90" width="400" height="420" rx="20"
+        fill="url(#cardTw)" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
+
+  <!-- Card header bar -->
+  <rect x="740" y="90" width="400" height="50" rx="20" fill="#ffffff" fill-opacity="0.08"/>
+  <circle cx="772" cy="115" r="8" fill="#60a5fa"/>
+  <text x="790" y="120" font-family="system-ui,-apple-system,sans-serif"
+        font-size="15" font-weight="700" fill="#ffffff">Live Dashboard</text>
+
+  <!-- KPI boxes -->
+  <rect x="756" y="160" width="110" height="68" rx="10" fill="#ffffff" fill-opacity="0.08"/>
+  <text x="811" y="184" font-family="system-ui,-apple-system,sans-serif"
+        font-size="10" fill="#93c5fd" text-anchor="middle">EMPLOYEES</text>
+  <text x="811" y="212" font-family="system-ui,-apple-system,sans-serif"
+        font-size="24" font-weight="800" fill="#ffffff" text-anchor="middle">1,284</text>
+
+  <rect x="878" y="160" width="110" height="68" rx="10" fill="#ffffff" fill-opacity="0.08"/>
+  <text x="933" y="184" font-family="system-ui,-apple-system,sans-serif"
+        font-size="10" fill="#93c5fd" text-anchor="middle">ATTENDANCE</text>
+  <text x="933" y="212" font-family="system-ui,-apple-system,sans-serif"
+        font-size="24" font-weight="800" fill="#ffffff" text-anchor="middle">96.4%</text>
+
+  <rect x="1000" y="160" width="114" height="68" rx="10" fill="#ffffff" fill-opacity="0.08"/>
+  <text x="1057" y="184" font-family="system-ui,-apple-system,sans-serif"
+        font-size="10" fill="#93c5fd" text-anchor="middle">PAYROLL</text>
+  <text x="1057" y="212" font-family="system-ui,-apple-system,sans-serif"
+        font-size="24" font-weight="800" fill="#ffffff" text-anchor="middle">$2.4M</text>
+
+  <!-- Mini chart -->
+  <rect x="756" y="250" width="368" height="148" rx="10" fill="#ffffff" fill-opacity="0.05"/>
+  <text x="770" y="270" font-family="system-ui,-apple-system,sans-serif"
+        font-size="11" fill="#93c5fd">Monthly Performance</text>
+  <rect x="770" y="338" width="20" height="50"  rx="3" fill="#3b82f6" fill-opacity="0.7"/>
+  <rect x="798" y="318" width="20" height="70"  rx="3" fill="#3b82f6" fill-opacity="0.8"/>
+  <rect x="826" y="298" width="20" height="90"  rx="3" fill="#60a5fa"/>
+  <rect x="854" y="288" width="20" height="100" rx="3" fill="#93c5fd"/>
+  <rect x="882" y="278" width="20" height="110" rx="3" fill="#ffffff"/>
+  <rect x="910" y="288" width="20" height="100" rx="3" fill="#93c5fd"/>
+  <rect x="938" y="298" width="20" height="90"  rx="3" fill="#60a5fa"/>
+  <rect x="966" y="278" width="20" height="110" rx="3" fill="#93c5fd"/>
+  <rect x="994" y="268" width="20" height="120" rx="3" fill="#ffffff"/>
+  <rect x="1022" y="288" width="20" height="100" rx="3" fill="#93c5fd"/>
+  <polyline points="780,358 808,338 836,318 864,308 892,298 920,308 948,318 976,298 1004,288 1032,308"
+            stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Bottom domain -->
+  <text x="60" y="562" font-family="system-ui,-apple-system,sans-serif"
+        font-size="19" font-weight="500" fill="#93c5fd" fill-opacity="0.7">hrplatform.com</text>
+</svg>

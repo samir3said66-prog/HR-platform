@@ -1,0 +1,28 @@
+<div class="flex items-center gap-3">
+  <button
+    type="button"
+    role="switch"
+    [id]="id"
+    [attr.aria-checked]="isOn()"
+    [attr.aria-label]="ariaLabel || label"
+    [attr.aria-disabled]="disabled"
+    (click)="toggle()"
+    (keydown)="onKeydown($event)"
+    [disabled]="disabled"
+    [class]="getToggleClasses()"
+  >
+    <span class="sr-only">{{ label }}</span>
+    <span
+      class="inline-block h-5 w-5 transform rounded-full bg-white dark:bg-slate-900 shadow-md transition-transform duration-200"
+      [class.translate-x-5]="isOn()"
+      [class.translate-x-0]="!isOn()"
+    ></span>
+  </button>
+  <label
+    *ngIf="label"
+    [for]="id"
+    class="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer select-none"
+  >
+    {{ label }}
+  </label>
+</div>

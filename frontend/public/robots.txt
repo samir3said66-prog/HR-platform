@@ -1,0 +1,45 @@
+# HR Analytics Platform - robots.txt
+# https://www.robotstxt.org/
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/login
+Disallow: /auth/signup
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /assets/i18n/
+Allow: /assets/
+
+# Specific rules for search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Prevent AI crawlers if desired
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+# Sitemap location
+Sitemap: https://hrplatform.com/sitemap.xml
+Sitemap: https://hrplatform.com/sitemap-ar.xml

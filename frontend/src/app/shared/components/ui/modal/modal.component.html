@@ -1,0 +1,76 @@
+<div
+  *ngIf="isOpen()"
+  class="fixed inset-0 z-50 flex items-center justify-center"
+  [@fadeIn]
+  (click)="onBackdropClick()"
+  role="presentation"
+>
+  <!-- Backdrop -->
+  <div
+    class="absolute inset-0 bg-black/50 dark:bg-black/70 transition-opacity duration-300"
+    (click)="$event.stopPropagation()"
+  ></div>
+
+  <!-- Modal Dialog -->
+  <div
+    #modalDialog
+    class="relative bg-white dark:bg-slate-800 rounded-lg shadow-2xl dark:shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300"
+    role="dialog"
+    [attr.aria-modal]="true"
+    [attr.aria-labelledby]="titleId"
+    [attr.aria-describedby]="descriptionId"
+    (click)="$event.stopPropagation()"
+    (keydown)="onKeyDown($event)"
+  >
+    <!-- Header -->
+    <div
+      *ngIf="title || hasHeader"
+      class="border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between"
+    >
+      <h2 [id]="titleId" class="text-xl font-semibold text-slate-900 dark:text-white">
+        {{ title }}
+      </h2>
+      <button
+        *ngIf="showCloseButton"
+        (click)="close()"
+        class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+        aria-label="Close modal"
+        type="button"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+      <ng-content select="[appModalHeader]"></ng-content>
+    </div>
+
+    <!-- Body -->
+    <div
+      [id]="descriptionId"
+      class="flex-1 overflow-y-auto px-6 py-4 text-slate-700 dark:text-slate-300"
+    >
+      <ng-content></ng-content>
+    </div>
+
+    <!-- Footer -->
+    <div
+      *ngIf="hasFooter || actions.length > 0"
+      class="border-t border-slate-200 dark:border-slate-700 px-6 py-4 bg-slate-50 dark:bg-slate-900 flex items-center justify-end gap-3"
+    >
+      <ng-content select="[appModalFooter]"></ng-content>
+      <button
+        *ngFor="let action of actions"
+        (click)="onActionClick(action)"
+        [class]="getActionButtonClasses(action.variant)"
+        type="button"
+      >
+        {{ action.label }}
+      </button>
+    </div>
+  </div>
+</div>

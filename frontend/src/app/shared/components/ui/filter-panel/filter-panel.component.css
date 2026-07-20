@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+select[multiple] {
+  min-height: 120px;
+}
+
+select option {
+  padding: 8px;
+}
